@@ -40,10 +40,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 Este proyecto usa dos entornos diferenciados, cada uno ligado a una rama de Git:
 
 **Producción (`main`)**
-Cada vez que se fusiona código a la rama `main`, Vercel despliega automáticamente la versión actualizada al entorno de producción. Esta es la versión que ven los usuarios reales. La URL de producción se añadirá aquí cuando esté confirmada.
+Cada vez que se fusiona código a la rama `main`, Vercel despliega automáticamente la versión actualizada al entorno de producción. Esta es la versión que ven los usuarios reales.
+URL: https://academia-creativa-one.vercel.app
 
 **Staging / Vista previa (`develop`)**
-La rama `develop` tiene su propio despliegue automático en Vercel. Cada push a `develop` genera una URL de vista previa donde se puede comprobar que todo funciona antes de llegar a producción. La URL de staging se añadirá aquí cuando esté confirmada.
+La rama `develop` tiene su propio despliegue automático en Vercel. Cada push a `develop` actualiza esta URL, que siempre apunta al último estado de la rama.
+URL: https://academia-creativa-git-develop-aprehenderia-9285s-projects.vercel.app
 
 **La regla de oro**
 Nada va directamente a `main`. Todo cambio sigue este camino:
