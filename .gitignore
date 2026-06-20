@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — los archivos con credenciales reales nunca se suben
 .env*
+# excepción: el archivo de documentación sin valores reales sí se incluye
+!.env.example
 
 # vercel
 .vercel
