@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Tipografías */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Fondos y superficies */
+  --color-background: #FBF6F0;
+  --color-foreground: #2C2C2A;
+  --color-card: #FFFFFF;
+  --color-muted-foreground: #5F5E5A;
+  --color-border: #D3D1C7;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  /* Terracota — marca */
+  --color-primary: #D85A30;
+  --color-primary-button: #C44D26;
+  --color-primary-strong: #993C1D;
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Rampa terracota completa */
+  --color-terra-50: #FAECE7;
+  --color-terra-100: #F5C4B3;
+  --color-terra-400: #D85A30;
+  --color-terra-600: #C44D26;
+  --color-terra-700: #993C1D;
+  --color-terra-900: #4A1B0C;
+
+  /* Acento verde */
+  --color-accent: #0F6E56;
+
+  /* Escala tipográfica semántica */
+  --text-display: 2.25rem;
+  --text-display--line-height: 1.1;
+  --text-h1: 1.875rem;
+  --text-h1--line-height: 1.15;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.2;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
 }
