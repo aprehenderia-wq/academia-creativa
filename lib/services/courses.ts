@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { cache } from 'react'
 import { createAdminClient } from '@/lib/supabase/server'
 
 // Tipo que representa un curso tal como viene de la base de datos.
@@ -13,6 +14,38 @@ export type Course = {
   currency: string
   status: 'draft' | 'published'
   created_at: string
+}
+
+// Tipos para el temario: lecciones y secciones con sus lecciones anidadas.
+export type Lesson = {
+  id: string
+  title: string
+  video_id: string | null
+  position: number
+}
+
+export type CourseSection = {
+  id: string
+  title: string
+  position: number
+  lessons: Lesson[]
+}
+
+export type CourseWithCurriculum = Course & {
+  course_sections: CourseSection[]
+}
+
+// Tipo interno para el dato crudo que devuelve Supabase antes de ordenarlo.
+type RawSection = {
+  id: string
+  title: string
+  position: number
+  lessons: Array<{
+    id: string
+    title: string
+    video_id: string | null
+    position: number
+  }>
 }
 
 // Devuelve solo los cursos publicados, ordenados del más reciente al más antiguo.
@@ -38,3 +71,56 @@ export async function getPublishedCourses(): Promise<Course[]> {
 
   return data ?? []
 }
+
+// Devuelve un curso publicado por su slug, incluyendo todas sus secciones y
+// lecciones ordenadas por `position`. Devuelve null si el slug no existe, el
+// curso es un borrador, o hay un error de base de datos.
+//
+// `cache` de React deduplica la llamada: si generateMetadata y el componente
+// de página llaman a esta función con el mismo slug en el mismo render,
+// Supabase solo recibe UNA consulta.
+export const getCourseWithCurriculum = cache(
+  async (slug: string): Promise<CourseWithCurriculum | null> => {
+    const supabase = createAdminClient()
+
+    const { data, error } = await supabase
+      .from('courses')
+      .select(`
+        id, title, slug, description, price_cents, currency, status, created_at,
+        course_sections ( id, title, position, lessons ( id, title, video_id, position ) )
+      `)
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single()
+
+    if (error) {
+      // PGRST116 = "no rows returned" — slug no existe o el curso es borrador.
+      if (error.code === 'PGRST116') return null
+      console.error('Error al obtener el curso:', error.message)
+      return null
+    }
+
+    if (!data) return null
+
+    const rawSections = (data.course_sections as unknown as RawSection[]) ?? []
+
+    const sections: CourseSection[] = rawSections
+      .sort((a, b) => a.position - b.position)
+      .map((section) => ({
+        ...section,
+        lessons: [...section.lessons].sort((a, b) => a.position - b.position),
+      }))
+
+    return {
+      id: data.id,
+      title: data.title,
+      slug: data.slug,
+      description: data.description,
+      price_cents: data.price_cents,
+      currency: data.currency,
+      status: data.status as 'draft' | 'published',
+      created_at: data.created_at,
+      course_sections: sections,
+    }
+  }
+)
