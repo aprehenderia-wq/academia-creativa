@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Inter, Fraunces } from "next/font/google"
 import "./globals.css"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,7 +30,11 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="min-h-full flex flex-col font-sans antialiased bg-background text-foreground">
-        {children}
+        <Navbar />
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )
