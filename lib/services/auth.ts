@@ -3,17 +3,27 @@ import { createClient } from '@/lib/supabase/client'
 export type AuthResult = { error: string | null }
 export type SignUpResult = { userId: string | null; error: string | null }
 
-// Registra un nuevo usuario en Supabase Auth.
-// Devuelve el userId si tuvo éxito (para luego crear el perfil),
-// o un mensaje de error en español si falló.
+// Registra un nuevo usuario en Supabase Auth y crea su perfil.
+// Si la confirmación de email está desactivada, la sesión llega de inmediato
+// y podemos crear el perfil con el mismo cliente autenticado (respeta RLS).
 export async function signUp(
   email: string,
-  password: string
+  password: string,
+  fullName: string
 ): Promise<SignUpResult> {
   const supabase = createClient()
   const { data, error } = await supabase.auth.signUp({ email, password })
 
   if (error) return { userId: null, error: translateAuthError(error.message) }
+
+  if (data.user && data.session) {
+    await supabase.from('profiles').upsert({
+      id: data.user.id,
+      full_name: fullName,
+      email: data.user.email,
+    })
+  }
+
   return { userId: data.user?.id ?? null, error: null }
 }
 

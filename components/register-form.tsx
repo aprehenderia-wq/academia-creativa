@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { signUp } from '@/lib/services/auth'
-import { createProfileAction } from '@/app/auth/actions'
 
 export default function RegisterForm() {
   const router = useRouter()
@@ -21,21 +20,19 @@ export default function RegisterForm() {
     const email = (form.elements.namedItem('email') as HTMLInputElement).value
     const password = (form.elements.namedItem('password') as HTMLInputElement).value
 
-    const { userId, error: authError } = await signUp(email, password)
-    if (authError) {
-      setError(authError)
+    try {
+      const { error: authError } = await signUp(email, password, fullName)
+      if (authError) {
+        setError(authError)
+        setLoading(false)
+        return
+      }
+      router.push('/')
+      router.refresh()
+    } catch {
+      setError('Ha ocurrido un error inesperado. Inténtalo de nuevo.')
       setLoading(false)
-      return
     }
-
-    // Si hay sesión activa (confirmación de email desactivada),
-    // crear el perfil via Server Action de forma segura.
-    if (userId) {
-      await createProfileAction(fullName)
-    }
-
-    router.push('/')
-    router.refresh()
   }
 
   return (
