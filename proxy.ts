@@ -26,8 +26,17 @@ export async function proxy(request: NextRequest) {
   )
 
   // getUser() valida el JWT contra el servidor de Supabase (más seguro que getSession()).
-  // No usamos el resultado aquí; solo lo llamamos para que @supabase/ssr refresque las cookies.
-  await supabase.auth.getUser()
+  // Capturamos el usuario para proteger rutas privadas.
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { pathname } = request.nextUrl
+
+  // Rutas privadas: cualquier ruta que empiece por /dashboard requiere sesión activa.
+  if (pathname.startsWith('/dashboard') && !user) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/auth/login'
+    return NextResponse.redirect(loginUrl)
+  }
 
   return supabaseResponse
 }
