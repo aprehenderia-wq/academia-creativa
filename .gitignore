@@ -44,3 +44,6 @@ next-env.d.ts
 
 # configuración local de Claude Code (launch.json, etc.)
 .claude/
+
+# documentación generada por las skills de Claude (no es parte del proyecto)
+docs/superpowers/
