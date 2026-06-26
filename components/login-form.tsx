@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { signIn } from '@/lib/services/auth'
 
-export default function LoginForm() {
+export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -26,7 +26,7 @@ export default function LoginForm() {
       return
     }
 
-    router.push('/dashboard')
+    router.push(redirectTo ?? '/dashboard')
     router.refresh()
   }
 
