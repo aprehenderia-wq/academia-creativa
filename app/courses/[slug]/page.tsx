@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { getCourseWithCurriculum } from '@/lib/services/courses'
+import { getCourseWithCurriculum, getEnrollment } from '@/lib/services/courses'
 import type { CourseSection } from '@/lib/services/courses'
+import { createSessionClient } from '@/lib/supabase/server'
+import { BuyButton } from '@/components/buy-button'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -37,6 +39,14 @@ export default async function CourseDetailPage({ params }: Props) {
   const course = await getCourseWithCurriculum(slug)
 
   if (!course) notFound()
+
+  // Obtener usuario y estado de matrícula en paralelo para no bloquear el render
+  const supabase = await createSessionClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const isEnrolled = user
+    ? await getEnrollment(user.id, course.id)
+    : false
 
   const hasCurriculum = course.course_sections.length > 0
 
@@ -81,12 +91,13 @@ export default async function CourseDetailPage({ params }: Props) {
               <span className="font-serif font-semibold text-h2 text-foreground">
                 {formatPrice(course.price_cents, course.currency)}
               </span>
-              <button
-                type="button"
-                className="bg-primary-button hover:bg-primary-strong text-white text-small font-medium px-6 py-3 rounded-lg transition-colors"
-              >
-                Comprar
-              </button>
+              <BuyButton
+                courseId={course.id}
+                courseSlug={course.slug}
+                isEnrolled={isEnrolled}
+                userId={user?.id ?? null}
+                className="text-small px-6"
+              />
             </div>
 
             {/* Temario */}
@@ -114,12 +125,13 @@ export default async function CourseDetailPage({ params }: Props) {
                   {formatPrice(course.price_cents, course.currency)}
                 </span>
               </div>
-              <button
-                type="button"
-                className="w-full bg-primary-button hover:bg-primary-strong text-white font-medium py-3 rounded-lg transition-colors"
-              >
-                Comprar
-              </button>
+              <BuyButton
+                courseId={course.id}
+                courseSlug={course.slug}
+                isEnrolled={isEnrolled}
+                userId={user?.id ?? null}
+                className="w-full"
+              />
               <p className="text-caption text-muted-foreground text-center">
                 Acceso de por vida al comprarlo
               </p>

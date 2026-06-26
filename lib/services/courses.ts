@@ -14,6 +14,7 @@ export type Course = {
   currency: string
   status: 'draft' | 'published'
   created_at: string
+  stripe_price_id: string | null
 }
 
 // Tipos para el temario: lecciones y secciones con sus lecciones anidadas.
@@ -79,6 +80,32 @@ export async function getPublishedCourses(): Promise<Course[]> {
 // `cache` de React deduplica la llamada: si generateMetadata y el componente
 // de página llaman a esta función con el mismo slug en el mismo render,
 // Supabase solo recibe UNA consulta.
+// Comprueba si un usuario ya tiene matrícula en un curso concreto.
+// Devuelve true si la fila existe en enrollments, false en caso contrario.
+// Usa el cliente admin para poder consultar la tabla aunque RLS no permita
+// SELECT al rol anon; la restricción por user_id y course_id la aplicamos
+// nosotros en el código.
+export async function getEnrollment(
+  userId: string,
+  courseId: string
+): Promise<boolean> {
+  const supabase = createAdminClient()
+
+  const { data, error } = await supabase
+    .from('enrollments')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('course_id', courseId)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Error al comprobar matrícula:', error.message)
+    return false
+  }
+
+  return data !== null
+}
+
 export const getCourseWithCurriculum = cache(
   async (slug: string): Promise<CourseWithCurriculum | null> => {
     const supabase = createAdminClient()
@@ -86,7 +113,7 @@ export const getCourseWithCurriculum = cache(
     const { data, error } = await supabase
       .from('courses')
       .select(`
-        id, title, slug, description, price_cents, currency, status, created_at,
+        id, title, slug, description, price_cents, currency, status, created_at, stripe_price_id,
         course_sections ( id, title, position, lessons ( id, title, video_id, position ) )
       `)
       .eq('slug', slug)
@@ -120,6 +147,7 @@ export const getCourseWithCurriculum = cache(
       currency: data.currency,
       status: data.status as 'draft' | 'published',
       created_at: data.created_at,
+      stripe_price_id: (data as unknown as { stripe_price_id: string | null }).stripe_price_id ?? null,
       course_sections: sections,
     }
   }
