@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { signUp } from '@/lib/services/auth'
+import { sendWelcomeEmailAction } from '@/app/auth/actions'
 
 export default function RegisterForm() {
   const router = useRouter()
@@ -27,6 +28,7 @@ export default function RegisterForm() {
         setLoading(false)
         return
       }
+      void sendWelcomeEmailAction(email, fullName)
       router.push('/')
       router.refresh()
     } catch {

@@ -1,6 +1,7 @@
 'use server'
 
 import { createAdminClient, createSessionClient } from '@/lib/supabase/server'
+import { sendWelcomeEmail } from '@/lib/services/email'
 
 // Crea la fila en la tabla profiles para el usuario recién registrado.
 // Usa el admin client (service_role) para garantizar que el insert funciona
@@ -30,4 +31,20 @@ export async function createProfileAction(
   }
 
   return { error: null }
+}
+
+// Envía el email de bienvenida tras el registro. Si falla, se loguea pero
+// no hace fallar el registro: el alumno ya tiene cuenta.
+export async function sendWelcomeEmailAction(
+  email: string,
+  fullName: string
+): Promise<void> {
+  try {
+    await sendWelcomeEmail({ to: email, studentName: fullName })
+  } catch (err) {
+    console.error(
+      '[registro] Error al enviar email de bienvenida:',
+      err instanceof Error ? err.message : err
+    )
+  }
 }
