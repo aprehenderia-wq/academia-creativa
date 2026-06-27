@@ -28,7 +28,7 @@ export default function RegisterForm() {
         setLoading(false)
         return
       }
-      void sendWelcomeEmailAction(email, fullName)
+      await sendWelcomeEmailAction(email, fullName)
       router.push('/')
       router.refresh()
     } catch {
