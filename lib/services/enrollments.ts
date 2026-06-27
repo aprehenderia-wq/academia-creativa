@@ -103,19 +103,32 @@ export async function getInactiveStudents(): Promise<InactiveStudent[]> {
   const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'
 
-  // 1. Matrículas de más de 14 días, con perfil y datos del curso
+  // 1. Matrículas de más de 14 días, con datos del curso
+  // profiles se consulta por separado: no hay FK directa entre enrollments y profiles,
+  // ambas apuntan a auth.users por separado y PostgREST no resuelve esa relación transitiva.
   const { data: enrollments, error } = await admin
     .from('enrollments')
     .select(`
       user_id,
       course_id,
-      profiles ( full_name, email ),
       courses ( title, slug )
     `)
     .lt('enrolled_at', cutoff)
 
   if (error) throw new Error(`[inactividad] Error al consultar matrículas: ${error.message}`)
   if (!enrollments?.length) return []
+
+  // 1b. Perfiles de los alumnos matriculados (consulta separada)
+  const userIds = [...new Set(enrollments.map(e => e.user_id))]
+  const { data: profiles, error: profilesError } = await admin
+    .from('profiles')
+    .select('id, full_name, email')
+    .in('id', userIds)
+
+  if (profilesError) throw new Error(`[inactividad] Error al consultar perfiles: ${profilesError.message}`)
+
+  const profileByUser: Record<string, { full_name?: string; email?: string }> = {}
+  for (const p of profiles ?? []) profileByUser[p.id] = p
 
   // 2. Construir mapa lección → curso (necesario para vincular lesson_progress con cursos)
   const courseIds = [...new Set(enrollments.map(e => e.course_id))]
@@ -140,7 +153,6 @@ export async function getInactiveStudents(): Promise<InactiveStudent[]> {
   }
 
   // 3. Progreso reciente (últimos 14 días) para estos usuarios y lecciones
-  const userIds = [...new Set(enrollments.map(e => e.user_id))]
   const lessonIds = Object.keys(lessonToCourse)
 
   const { data: recentProgress } = userIds.length && lessonIds.length
@@ -163,9 +175,7 @@ export async function getInactiveStudents(): Promise<InactiveStudent[]> {
   return enrollments.flatMap(e => {
     if (activeSet.has(`${e.user_id}:${e.course_id}`)) return []
 
-    const profile = (Array.isArray(e.profiles) ? e.profiles[0] : e.profiles) as
-      | { full_name?: string; email?: string }
-      | null
+    const profile = profileByUser[e.user_id] ?? null
     const course = (Array.isArray(e.courses) ? e.courses[0] : e.courses) as
       | { title?: string; slug?: string }
       | null
