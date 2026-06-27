@@ -27,10 +27,19 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   if (session_id) {
     try {
       const session = await stripe.checkout.sessions.retrieve(session_id)
-      courseTitle = session.metadata?.course_title ?? null
-      courseSlug = session.metadata?.course_slug ?? null
-    } catch {
-      // Si Stripe no responde o el ID es inválido, mostramos el mensaje genérico
+      // Verificar que la sesión pertenece al usuario logueado
+      if (session.metadata?.user_id && session.metadata.user_id !== user.id) {
+        // La sesión no pertenece a este usuario — no exponer datos
+      } else {
+        courseTitle = session.metadata?.course_title ?? null
+        courseSlug = session.metadata?.course_slug ?? null
+      }
+    } catch (err) {
+      console.warn(
+        '[checkout/success] No se pudo recuperar la sesión de Stripe:',
+        session_id,
+        err instanceof Error ? err.message : err
+      )
     }
   }
 
