@@ -80,6 +80,8 @@ export async function POST(request: NextRequest) {
     metadata: {
       course_id: course.id,
       user_id: user.id,
+      course_title: course.title,
+      course_slug: course.slug,
     },
   })
 
