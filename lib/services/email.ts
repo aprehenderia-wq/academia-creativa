@@ -49,7 +49,7 @@ export async function sendWelcomeEmail({
   }
 }
 
-function buildWelcomeEmailHtml({ studentName }: { studentName: string }): string {
+export function buildWelcomeEmailHtml({ studentName }: { studentName: string }): string {
   const catalogUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'}`
 
   return `<!DOCTYPE html>
@@ -126,7 +126,7 @@ function buildWelcomeEmailHtml({ studentName }: { studentName: string }): string
 </html>`
 }
 
-function buildPurchaseEmailHtml({
+export function buildPurchaseEmailHtml({
   studentName,
   courseName,
   courseUrl,
@@ -232,7 +232,7 @@ export async function sendInactivityReminderEmail({
   }
 }
 
-function buildInactivityReminderHtml({
+export function buildInactivityReminderHtml({
   studentName,
   courseName,
   courseUrl,

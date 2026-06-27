@@ -47,7 +47,7 @@ export async function signOut(): Promise<void> {
 
 // Convierte los mensajes de error de Supabase (en inglés) a mensajes
 // amigables en español para mostrar al usuario.
-function translateAuthError(message: string): string {
+export function translateAuthError(message: string): string {
   if (
     message.includes('User already registered') ||
     message.includes('already registered')
