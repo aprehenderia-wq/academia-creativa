@@ -71,7 +71,8 @@ export async function getEnrolledCourses(userId: string): Promise<EnrolledCourse
   }, {})
 
   return enrollments.map(enrollment => {
-    const course = enrollment.courses as { title: string; slug: string } | null
+    const courseRaw = enrollment.courses
+    const course = (Array.isArray(courseRaw) ? courseRaw[0] : courseRaw) as { title: string; slug: string } | null
     const courseSectionIds = sectionsByCourse[enrollment.course_id] ?? []
     const courseLessonIds = courseSectionIds.flatMap(sid => lessonsBySection[sid] ?? [])
     const totalLessons = courseLessonIds.length
