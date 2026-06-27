@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { createAdminClient } from '@/lib/supabase/server'
+import { sendPurchaseConfirmationEmail } from '@/lib/services/email'
 
 // El runtime DEBE ser Node.js (no Edge). La verificación de firma de Stripe
 // usa APIs de criptografía que no existen en el runtime Edge; si Next.js
@@ -62,6 +63,8 @@ export async function POST(request: NextRequest) {
   //    su metadata. Son los mismos que pusimos en app/api/checkout/route.ts.
   const courseId = session.metadata?.course_id
   const userId = session.metadata?.user_id
+  const courseTitle = session.metadata?.course_title ?? null
+  const courseSlug = session.metadata?.course_slug ?? null
 
   if (!courseId || !userId) {
     // Si falta el metadata no podemos matricular a nadie. Respondemos 400:
@@ -129,7 +132,40 @@ export async function POST(request: NextRequest) {
     `[webhook stripe] Matrícula creada: usuario ${userId} → curso ${courseId}`
   )
 
-  // 7. Confirmar a Stripe que todo salió bien. Si no respondiéramos 200,
+  // 8. Enviar email de confirmación de compra. Si falla, lo logueamos pero
+  //    NO devolvemos error: la matrícula ya quedó creada y Stripe no debe
+  //    reintentar el webhook por un problema de email.
+  try {
+    const [userResult, profileResult] = await Promise.all([
+      admin.auth.admin.getUserById(userId),
+      admin.from('profiles').select('full_name').eq('id', userId).single(),
+    ])
+
+    const userEmail = userResult.data?.user?.email
+    if (!userEmail) {
+      console.error(`[webhook stripe] No se encontró email para el usuario ${userId}`)
+    } else {
+      const studentName = profileResult.data?.full_name ?? 'alumno/a'
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'
+      const courseUrl = courseSlug ? `${siteUrl}/courses/${courseSlug}` : `${siteUrl}/dashboard`
+
+      await sendPurchaseConfirmationEmail({
+        to: userEmail,
+        studentName,
+        courseName: courseTitle ?? 'tu nuevo curso',
+        courseUrl,
+      })
+
+      console.log(`[webhook stripe] Email de confirmación enviado a ${userEmail}`)
+    }
+  } catch (emailErr) {
+    console.error(
+      '[webhook stripe] Error al enviar email (matrícula ya creada):',
+      emailErr instanceof Error ? emailErr.message : emailErr
+    )
+  }
+
+  // 9. Confirmar a Stripe que todo salió bien. Si no respondiéramos 200,
   //    Stripe daría el evento por fallido y lo reintentaría.
   return NextResponse.json({ received: true })
 }
