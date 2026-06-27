@@ -28,8 +28,10 @@ export default function RegisterForm() {
         setLoading(false)
         return
       }
-      await createProfileAction(fullName)
-      await sendWelcomeEmailAction(email, fullName)
+      await Promise.all([
+        createProfileAction(fullName),
+        sendWelcomeEmailAction(email, fullName),
+      ])
       router.push('/')
       router.refresh()
     } catch {
