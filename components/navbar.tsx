@@ -34,6 +34,12 @@ export default async function Navbar() {
               <span className="text-small text-muted-foreground hidden sm:block truncate max-w-[160px]">
                 {displayName}
               </span>
+              <Link
+                href="/dashboard"
+                className="text-small font-medium text-foreground hover:text-primary-strong transition-colors"
+              >
+                Mis cursos
+              </Link>
               <LogoutButton />
             </>
           ) : (
