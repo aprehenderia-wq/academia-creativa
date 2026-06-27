@@ -1,11 +1,42 @@
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { createSessionClient } from '@/lib/supabase/server'
+import { stripe } from '@/lib/stripe'
 
 export const metadata: Metadata = {
   title: 'Pago completado — Academia Creativa',
 }
 
-export default function CheckoutSuccessPage() {
+type Props = {
+  searchParams: Promise<{ session_id?: string }>
+}
+
+export default async function CheckoutSuccessPage({ searchParams }: Props) {
+  // 1. Verificar que el alumno tiene sesión activa
+  const supabase = await createSessionClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/auth/login')
+
+  // 2. Intentar obtener los detalles del pago desde Stripe
+  const { session_id } = await searchParams
+
+  let courseTitle: string | null = null
+  let courseSlug: string | null = null
+
+  if (session_id) {
+    try {
+      const session = await stripe.checkout.sessions.retrieve(session_id)
+      courseTitle = session.metadata?.course_title ?? null
+      courseSlug = session.metadata?.course_slug ?? null
+    } catch {
+      // Si Stripe no responde o el ID es inválido, mostramos el mensaje genérico
+    }
+  }
+
+  const courseHref = courseSlug ? `/courses/${courseSlug}` : '/dashboard'
+  const courseLinkLabel = courseSlug ? 'Ir al curso' : 'Ir a mi panel'
+
   return (
     <main className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-card border border-border rounded-xl p-10 text-center flex flex-col gap-6">
@@ -35,18 +66,25 @@ export default function CheckoutSuccessPage() {
             ¡Pago completado!
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed">
-            Tu compra se ha procesado correctamente. En breve tendrás
-            acceso al curso en tu panel.
+            {courseTitle ? (
+              <>
+                Tu compra de{' '}
+                <span className="font-medium text-foreground">{courseTitle}</span>{' '}
+                se ha procesado correctamente.
+              </>
+            ) : (
+              'Tu compra se ha procesado correctamente. En breve tendrás acceso al curso en tu panel.'
+            )}
           </p>
         </div>
 
         {/* Acciones */}
         <div className="flex flex-col gap-3">
           <Link
-            href="/dashboard"
+            href={courseHref}
             className="w-full bg-primary-button hover:bg-primary-strong text-white font-medium py-3 rounded-lg transition-colors text-center"
           >
-            Ir a mi panel
+            {courseLinkLabel}
           </Link>
           <Link
             href="/"
