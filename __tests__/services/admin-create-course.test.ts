@@ -51,6 +51,8 @@ describe('createCourse', () => {
     const result = await createCourse(validInput)
     expect(result.error).toBeNull()
     expect(result.data?.title).toBe('Branding desde cero')
+    expect(result.data?.enrollment_count).toBe(0)
+    expect(result.data?.id).toBe('c1')
   })
 
   it('returns error when slug already exists', async () => {

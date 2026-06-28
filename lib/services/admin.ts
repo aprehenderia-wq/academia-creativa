@@ -129,15 +129,14 @@ export async function createCourse(
   const supabase = createAdminClient()
 
   // Check slug uniqueness
-  const { data: existing } = await supabase
+  const { data: existing, error: slugError } = await supabase
     .from('courses')
     .select('id')
     .eq('slug', input.slug)
     .maybeSingle()
 
-  if (existing) {
-    return { data: null, error: 'El slug ya está en uso. Elige otro.' }
-  }
+  if (slugError) return { data: null, error: slugError.message }
+  if (existing) return { data: null, error: 'El slug ya está en uso. Elige otro.' }
 
   const { data, error } = await supabase
     .from('courses')
