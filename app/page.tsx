@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { getPublishedCourses } from "@/lib/services/courses"
 import { CourseCard } from "@/components/course-card"
+import { FadeIn } from "@/components/fade-in"
 
 export const metadata: Metadata = {
   title: "Academia Creativa — Cursos de diseño online",
@@ -43,7 +44,7 @@ export default async function HomePage() {
             {/* Botón CTA */}
             <a
               href="#catalogo"
-              className="font-sans font-medium text-white text-small px-7 py-3 rounded-md transition-colors bg-primary-button hover:bg-primary-strong"
+              className="font-sans font-medium text-white text-small px-7 py-3 rounded-md transition-all duration-200 bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95"
             >
               Explorar cursos
             </a>
@@ -104,8 +105,10 @@ export default async function HomePage() {
             <EmptyState />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+              {courses.map((course, i) => (
+                <FadeIn key={course.id} delay={i * 80} className="h-full">
+                  <CourseCard course={course} />
+                </FadeIn>
               ))}
             </div>
           )}

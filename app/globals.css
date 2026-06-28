@@ -1,5 +1,58 @@
 @import "tailwindcss";
 
+/* ── Micro-animaciones (8.6) ── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Clase aplicada por IntersectionObserver */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 450ms ease, transform 450ms ease;
+}
+
+.fade-in-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Transición entre páginas */
+.animate-page-enter {
+  animation: pageEnter 300ms ease-out both;
+}
+
+/* Respeta la preferencia del sistema de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-page-enter {
+    animation: none;
+  }
+}
+
 @theme {
   /* Tipografías */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;

@@ -3,6 +3,7 @@ import { Inter, Fraunces } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
+import { PageWrapper } from "@/components/page-wrapper"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +33,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans antialiased bg-background text-foreground">
         <Navbar />
         <main className="flex-1">
-          {children}
+          <PageWrapper>{children}</PageWrapper>
         </main>
         <Footer />
       </body>

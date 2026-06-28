@@ -4,6 +4,7 @@ import { createSessionClient } from '@/lib/supabase/server'
 import { getEnrolledCourses } from '@/lib/services/enrollments'
 import { getUserCertificates } from '@/lib/services/certificates'
 import { EnrolledCourseCard } from '@/components/enrolled-course-card'
+import { FadeIn } from '@/components/fade-in'
 
 export const metadata = {
   title: 'Panel del alumno — Academia Creativa',
@@ -107,8 +108,10 @@ export default async function DashboardPage() {
                 : `${enrolledCourses.length} cursos matriculados`}
             </p>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {enrolledCourses.map(course => (
-                <EnrolledCourseCard key={course.course_id} course={course} />
+              {enrolledCourses.map((course, i) => (
+                <FadeIn key={course.course_id} delay={i * 80} className="h-full">
+                  <EnrolledCourseCard course={course} />
+                </FadeIn>
               ))}
             </div>
           </>

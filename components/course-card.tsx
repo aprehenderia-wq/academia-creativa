@@ -26,7 +26,7 @@ export function CourseCard({ course }: { course: Course }) {
   const coverColor = getCoverColor(course.category)
 
   return (
-    <article className="bg-card rounded-xl border border-border flex flex-col overflow-hidden">
+    <article className="bg-card rounded-xl border border-border flex flex-col overflow-hidden h-full transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg">
       {/* Portada */}
       {course.cover_image ? (
         <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
@@ -86,7 +86,7 @@ export function CourseCard({ course }: { course: Course }) {
           </span>
           <Link
             href={`/courses/${course.slug}`}
-            className="bg-primary-button hover:bg-primary-strong text-white text-small font-medium px-5 py-2.5 rounded-lg transition-colors"
+            className="bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white text-small font-medium px-5 py-2.5 rounded-lg transition-all duration-200"
           >
             Ver curso
           </Link>
