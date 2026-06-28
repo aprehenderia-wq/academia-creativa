@@ -171,7 +171,7 @@ export function AdminCourseForm() {
             onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
             disabled={loading}
             placeholder="Aprende a construir una identidad de marca sólida desde los fundamentos."
-            className={`${inputCls(!!fieldErrors.description)} resize-none`}
+            className={`${inputCls(!!fieldErrors.description, true)} resize-none`}
           />
         </Field>
 
@@ -182,7 +182,7 @@ export function AdminCourseForm() {
             onChange={(e) => setForm((p) => ({ ...p, long_description: e.target.value }))}
             disabled={loading}
             placeholder="En este curso explorarás..."
-            className={`${inputCls(false)} resize-none`}
+            className={`${inputCls(false, true)} resize-none`}
           />
         </Field>
       </section>
@@ -251,8 +251,8 @@ export function AdminCourseForm() {
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-function inputCls(hasError: boolean) {
-  return `w-full h-10 px-3 rounded-md border bg-card text-foreground text-small placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 transition-colors ${
+function inputCls(hasError: boolean, isTextarea = false) {
+  return `w-full ${isTextarea ? 'py-2' : 'h-10'} px-3 rounded-md border bg-card text-foreground text-small placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 transition-colors ${
     hasError ? 'border-red-400 focus:ring-red-300' : 'border-border'
   }`
 }
