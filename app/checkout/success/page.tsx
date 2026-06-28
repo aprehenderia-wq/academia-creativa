@@ -74,7 +74,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           <h1 className="font-serif font-semibold text-h1 text-foreground">
             ¡Pago completado!
           </h1>
-          <p className="text-base text-muted-foreground leading-relaxed">
+          <p className="text-body text-muted-foreground leading-relaxed">
             {courseTitle ? (
               <>
                 Tu compra de{' '}
@@ -91,7 +91,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         <div className="flex flex-col gap-3">
           <Link
             href={courseHref}
-            className="w-full bg-primary-button hover:bg-primary-strong text-white font-medium py-3 rounded-lg transition-colors text-center"
+            className="w-full bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white font-medium py-3 rounded-lg transition-all duration-200 text-center"
           >
             {courseLinkLabel}
           </Link>

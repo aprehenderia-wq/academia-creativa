@@ -9,7 +9,7 @@ function formatPrice(cents: number, currency: string): string {
 }
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
-  published: { label: 'Publicado', className: 'bg-[#D6EDE7] text-[#0F6E56]' },
+  published: { label: 'Publicado', className: 'bg-success-bg text-accent' },
   draft:     { label: 'Borrador',  className: 'bg-terra-50 text-terra-700' },
 }
 

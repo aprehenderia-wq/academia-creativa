@@ -118,7 +118,7 @@ export default async function CourseDetailPage({ params }: Props) {
 
             {/* Descripción principal */}
             {bodyDescription && (
-              <p className="text-base text-muted-foreground leading-relaxed mb-8">
+              <p className="text-body text-muted-foreground leading-relaxed mb-8">
                 {bodyDescription}
               </p>
             )}

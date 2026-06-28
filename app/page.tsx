@@ -62,7 +62,7 @@ export default async function HomePage() {
                   key={i}
                   className="flex-1 flex flex-col items-center py-5 px-4 gap-1 bg-terra-50"
                 >
-                  <span className="font-serif font-semibold text-[1.25rem] leading-none text-terra-700">
+                  <span className="font-serif font-semibold text-h3 leading-none text-terra-700">
                     {stat.value}
                   </span>
                   <span className="font-sans text-small text-muted-foreground">
