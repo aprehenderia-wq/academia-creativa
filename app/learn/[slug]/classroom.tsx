@@ -34,12 +34,14 @@ export function Classroom({
   sections,
   initialVideo,
   completedLessonIds,
+  initialCertificateId,
 }: {
   courseTitle: string
   courseSlug: string
   sections: ClassroomSection[]
   initialVideo: { lessonId: string; url: string } | null
   completedLessonIds: string[]
+  initialCertificateId: string | null
 }) {
   const allLessons = sections.flatMap((s) => s.lessons)
   const initialLesson =
@@ -60,6 +62,7 @@ export function Classroom({
   const [completed, setCompleted] = useState<Set<string>>(
     () => new Set(completedLessonIds)
   )
+  const [certificateId, setCertificateId] = useState<string | null>(initialCertificateId)
   const [isPending, startTransition] = useTransition()
 
   // Cada petición lleva un número. Si el alumno cambia de lección antes de que
@@ -68,12 +71,17 @@ export function Classroom({
 
   const selectedLesson = allLessons.find((l) => l.id === selectedId) ?? null
 
+  const totalLessons = sections.reduce((acc, s) => acc + s.lessons.length, 0)
+
   function handleCompleteLesson() {
     if (!selectedLesson || completed.has(selectedLesson.id)) return
     startTransition(async () => {
       const result = await completeLesson(selectedLesson.id)
       if (result.completed) {
         setCompleted((prev) => new Set([...prev, selectedLesson.id]))
+        if (result.courseCompleted && result.certificateId) {
+          setCertificateId(result.certificateId)
+        }
       }
     })
   }
@@ -131,6 +139,28 @@ export function Classroom({
     <div className="lg:grid lg:grid-cols-3 lg:gap-10">
       {/* ── Reproductor (columna principal) ─────────────────────────────── */}
       <div className="lg:col-span-2">
+        {/* Banner de felicitación — aparece cuando el curso está completado */}
+        {certificateId && (
+          <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 rounded-xl border border-green-200 bg-green-50 px-5 py-4">
+            <div className="flex-1">
+              <p className="font-medium text-green-900 text-small">
+                ¡Felicitaciones! Completaste el curso
+              </p>
+              <p className="text-caption text-green-700 mt-0.5">
+                Tu certificado está listo para descargar.
+              </p>
+            </div>
+            <a
+              href={`/api/certificates/${certificateId}/download`}
+              download
+              className="shrink-0 flex items-center gap-2 rounded-lg bg-green-700 hover:bg-green-800 text-white text-small font-medium px-4 py-2.5 transition-colors"
+            >
+              <DownloadIcon />
+              Descargar certificado
+            </a>
+          </div>
+        )}
+
         {selectedLesson && (
           <p className="font-serif text-h3 text-foreground mb-4">
             {selectedLesson.title}
@@ -161,8 +191,8 @@ export function Classroom({
           )}
         </div>
 
-        {/* Botón de completar lección */}
-        {selectedLesson && (
+        {/* Botón de completar lección (se oculta cuando el curso ya tiene certificado) */}
+        {selectedLesson && !certificateId && (
           <div className="mt-4 flex items-center gap-3">
             {completed.has(selectedLesson.id) ? (
               <div className="flex items-center gap-2 text-small font-medium text-green-700">
@@ -270,6 +300,14 @@ function CheckIcon({ className = 'h-5 w-5' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden>
       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  )
+}
+
+function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v12m0 0l-3.5-3.5M12 16l3.5-3.5M4 20h16" />
     </svg>
   )
 }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { getCourseWithCurriculum, getEnrollment } from '@/lib/services/courses'
 import { createSessionClient } from '@/lib/supabase/server'
 import { signLessonVideoUrl } from '@/lib/bunny'
+import { getCertificateByUserAndCourse } from '@/lib/services/certificates'
 import { Classroom } from './classroom'
 
 async function getCompletedLessonIds(userId: string, lessonIds: string[]): Promise<string[]> {
@@ -61,6 +62,12 @@ export default async function ClassroomPage({ params }: Props) {
   const allLessonIds = course.course_sections.flatMap((s) => s.lessons.map((l) => l.id))
   const completedLessonIds = await getCompletedLessonIds(user.id, allLessonIds)
 
+  const cert =
+    allLessonIds.length > 0 && completedLessonIds.length >= allLessonIds.length
+      ? await getCertificateByUserAndCourse(user.id, course.id)
+      : null
+  const initialCertificateId = cert?.id ?? null
+
   const sections = course.course_sections.map((section) => ({
     id: section.id,
     title: section.title,
@@ -115,6 +122,7 @@ export default async function ClassroomPage({ params }: Props) {
             sections={sections}
             initialVideo={initialVideo}
             completedLessonIds={completedLessonIds}
+            initialCertificateId={initialCertificateId}
           />
         ) : (
           <div className="text-center py-16 px-4 border border-border rounded-xl">

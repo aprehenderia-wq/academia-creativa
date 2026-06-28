@@ -1,16 +1,14 @@
 'use server'
 
-import { createSessionClient } from '@/lib/supabase/server'
+import { createSessionClient, createAdminClient } from '@/lib/supabase/server'
+import { issueCertificate } from '@/lib/services/certificates'
 
-/**
- * Marca una lección como completada para el usuario autenticado.
- *
- * Verifica: sesión activa + matrícula en el curso de esa lección.
- * Si ya estaba completada, no falla — devuelve { completed: true } igualmente.
- */
-export async function completeLesson(
-  lessonId: string
-): Promise<{ completed: boolean; error?: string }> {
+export async function completeLesson(lessonId: string): Promise<{
+  completed: boolean
+  courseCompleted?: boolean
+  certificateId?: string
+  error?: string
+}> {
   const supabase = await createSessionClient()
 
   const {
@@ -41,7 +39,7 @@ export async function completeLesson(
     return { completed: false, error: 'Lección sin curso asociado' }
   }
 
-  // Verifica que el usuario esté matriculado en ese curso
+  // Verifica matrícula
   const { data: enrollment } = await supabase
     .from('enrollments')
     .select('id')
@@ -53,7 +51,7 @@ export async function completeLesson(
     return { completed: false, error: 'No estás matriculado en este curso' }
   }
 
-  // Inserta en lesson_progress; si ya existe (restricción única), no hace nada
+  // Marca la lección como completada (sin error si ya existía)
   const { error: upsertError } = await supabase.from('lesson_progress').upsert(
     { user_id: user.id, lesson_id: lessonId },
     { onConflict: 'user_id,lesson_id', ignoreDuplicates: true }
@@ -63,5 +61,47 @@ export async function completeLesson(
     return { completed: false, error: 'Error al guardar el progreso' }
   }
 
-  return { completed: true }
+  // ── Detección de curso completado ──────────────────────────────────────────
+  // Usamos admin para no depender de las políticas RLS al contar lecciones
+  const admin = createAdminClient()
+
+  const { data: sections } = await admin
+    .from('course_sections')
+    .select('id')
+    .eq('course_id', courseId)
+
+  const sectionIds = (sections ?? []).map((s) => s.id)
+
+  const { data: allLessons } = sectionIds.length
+    ? await admin.from('lessons').select('id').in('section_id', sectionIds)
+    : { data: [] as { id: string }[] }
+
+  const totalLessons = (allLessons ?? []).length
+
+  if (totalLessons === 0) {
+    return { completed: true }
+  }
+
+  const lessonIds = (allLessons ?? []).map((l) => l.id)
+
+  const { count } = await supabase
+    .from('lesson_progress')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .in('lesson_id', lessonIds)
+
+  const courseCompleted = (count ?? 0) >= totalLessons
+
+  if (!courseCompleted) {
+    return { completed: true, courseCompleted: false }
+  }
+
+  // Emite el certificado (o recupera el existente)
+  const certificateId = await issueCertificate(user.id, courseId)
+
+  return {
+    completed: true,
+    courseCompleted: true,
+    certificateId: certificateId ?? undefined,
+  }
 }
