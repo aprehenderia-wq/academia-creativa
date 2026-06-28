@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getAdminCourses } from '@/lib/services/admin'
 
 function formatPrice(cents: number, currency: string): string {
@@ -18,9 +19,17 @@ export default async function AdminCursos() {
 
   return (
     <div>
-      <div className="mb-8 flex items-baseline gap-3">
-        <h1 className="font-serif font-semibold text-h1 text-foreground">Cursos</h1>
-        <span className="text-small text-muted-foreground">{courses.length} en total</span>
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <div className="flex items-baseline gap-3">
+          <h1 className="font-serif font-semibold text-h1 text-foreground">Cursos</h1>
+          <span className="text-small text-muted-foreground">{courses.length} en total</span>
+        </div>
+        <Link
+          href="/admin/cursos/nuevo"
+          className="shrink-0 bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white text-small font-medium px-4 py-2 rounded-lg transition-all duration-200"
+        >
+          + Nuevo curso
+        </Link>
       </div>
 
       <div className="bg-card border border-border rounded-xl overflow-hidden">
