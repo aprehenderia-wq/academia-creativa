@@ -7,7 +7,7 @@ import { EnrolledCourseCard } from '@/components/enrolled-course-card'
 import { FadeIn } from '@/components/fade-in'
 
 export const metadata = {
-  title: 'Panel del alumno — Academia Creativa',
+  title: 'Mis cursos',
 }
 
 export default async function DashboardPage() {

@@ -5,9 +5,11 @@ import { CourseCard } from "@/components/course-card"
 import { FadeIn } from "@/components/fade-in"
 
 export const metadata: Metadata = {
-  title: "Academia Creativa — Cursos de diseño online",
+  title: {
+    absolute: 'Academia Creativa — Cursos de diseño digital',
+  },
   description:
-    "Cursos prácticos de diseño gráfico, branding, ilustración y motion graphics. Aprende las herramientas y el criterio para crear trabajo profesional que conecta.",
+    'Cursos prácticos de diseño gráfico, branding, ilustración y motion graphics. Aprende las herramientas y el criterio para crear trabajo profesional que conecta.',
 }
 
 export default async function HomePage() {

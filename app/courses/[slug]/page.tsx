@@ -15,8 +15,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const course = await getCourseWithCurriculum(slug)
   if (!course) return {}
   return {
-    title: `${course.title} — Academia Creativa`,
+    title: course.title,
     description: course.description ?? undefined,
+    openGraph: {
+      title: course.title,
+      description: course.description ?? undefined,
+      images: course.cover_image
+        ? [{ url: course.cover_image, width: 1200, height: 630, alt: course.title }]
+        : [{ url: '/og', width: 1200, height: 630, alt: 'Academia Creativa' }],
+    },
   }
 }
 

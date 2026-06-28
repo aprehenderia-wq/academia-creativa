@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const course = await getCourseWithCurriculum(slug)
   if (!course) return {}
   return {
-    title: `Aula · ${course.title} — Academia Creativa`,
+    title: `Aula · ${course.title}`,
   }
 }
 

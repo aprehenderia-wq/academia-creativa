@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import { getAdminStats } from '@/lib/services/admin'
+
+export const metadata: Metadata = {
+  title: 'Panel de administración',
+}
 
 export default async function AdminDashboard() {
   const stats = await getAdminStats()

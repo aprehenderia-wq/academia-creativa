@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Pago cancelado — Academia Creativa',
+  title: 'Pago cancelado',
 }
 
 type Props = {

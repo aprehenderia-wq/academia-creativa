@@ -18,9 +18,37 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 })
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa.vercel.app'
+const OG_DESCRIPTION = 'Cursos de diseño digital para creativos que quieren vivir de lo que aman.'
+
 export const metadata: Metadata = {
-  title: "Academia Creativa",
-  description: "Cursos de diseño para creadores.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'Academia Creativa — Cursos de diseño digital',
+    template: '%s — Academia Creativa',
+  },
+  description: OG_DESCRIPTION,
+  openGraph: {
+    siteName: 'Academia Creativa',
+    locale: 'es_ES',
+    type: 'website',
+    url: SITE_URL,
+    title: 'Academia Creativa',
+    description: OG_DESCRIPTION,
+    images: [{ url: '/og', width: 1200, height: 630, alt: 'Academia Creativa' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Academia Creativa',
+    description: OG_DESCRIPTION,
+    images: ['/og'],
+  },
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({

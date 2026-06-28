@@ -5,7 +5,7 @@ import { createSessionClient } from '@/lib/supabase/server'
 import { stripe } from '@/lib/stripe'
 
 export const metadata: Metadata = {
-  title: 'Pago completado — Academia Creativa',
+  title: 'Pago completado',
 }
 
 type Props = {

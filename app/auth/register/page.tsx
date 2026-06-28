@@ -2,7 +2,7 @@ import Link from 'next/link'
 import RegisterForm from '@/components/register-form'
 
 export const metadata = {
-  title: 'Crear cuenta — Academia Creativa',
+  title: 'Crear cuenta',
 }
 
 export default function RegisterPage() {
