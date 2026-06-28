@@ -9,13 +9,11 @@ function formatPrice(cents: number, currency: string): string {
   }).format(cents / 100)
 }
 
-// Color y etiqueta provisionales hasta que exista la columna `category` en la BD.
-// Cuando se añada, reemplazar estas constantes por una función que mapee
-// la categoría al color correspondiente del sistema de diseño.
 const COVER_COLOR = "#C44D26"
-const CATEGORY_LABEL = "Diseño"
 
 export function CourseCard({ course }: { course: Course }) {
+  const categoryLabel = course.category ?? "Diseño"
+
   return (
     <article className="bg-card rounded-xl border border-border flex flex-col overflow-hidden">
       {/* Portada tipográfica */}
@@ -24,7 +22,7 @@ export function CourseCard({ course }: { course: Course }) {
         style={{ backgroundColor: COVER_COLOR, aspectRatio: "16 / 10" }}
       >
         <span className="font-sans text-caption font-medium uppercase tracking-widest text-white">
-          {CATEGORY_LABEL}
+          {categoryLabel}
         </span>
         <p className="font-serif font-semibold text-xl text-white leading-tight line-clamp-3">
           {course.title}
@@ -33,9 +31,16 @@ export function CourseCard({ course }: { course: Course }) {
 
       {/* Cuerpo de la tarjeta */}
       <div className="flex flex-col flex-1 p-5 gap-3">
-        <span className="self-start bg-terra-50 text-terra-700 text-caption font-medium px-2 py-1 rounded-md">
-          {CATEGORY_LABEL}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="bg-terra-50 text-terra-700 text-caption font-medium px-2 py-1 rounded-md">
+            {categoryLabel}
+          </span>
+          {course.level && (
+            <span className="border border-border text-muted-foreground text-caption font-medium px-2 py-1 rounded-md">
+              {course.level}
+            </span>
+          )}
+        </div>
 
         <h2 className="font-serif font-medium text-h3 text-foreground line-clamp-2">
           {course.title}

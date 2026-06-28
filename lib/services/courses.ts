@@ -15,6 +15,11 @@ export type Course = {
   status: 'draft' | 'published'
   created_at: string
   stripe_price_id: string | null
+  category: string | null
+  level: string | null
+  instructor_name: string | null
+  long_description: string | null
+  what_you_learn: string[] | null
 }
 
 // Tipos para el temario: lecciones y secciones con sus lecciones anidadas.
@@ -114,6 +119,7 @@ export const getCourseWithCurriculum = cache(
       .from('courses')
       .select(`
         id, title, slug, description, price_cents, currency, status, created_at, stripe_price_id,
+        category, level, instructor_name, long_description, what_you_learn,
         course_sections ( id, title, position, lessons ( id, title, video_id, position ) )
       `)
       .eq('slug', slug)
@@ -138,16 +144,22 @@ export const getCourseWithCurriculum = cache(
         lessons: [...section.lessons].sort((a, b) => a.position - b.position),
       }))
 
+    const d = data as unknown as Course & { course_sections: unknown }
     return {
-      id: data.id,
-      title: data.title,
-      slug: data.slug,
-      description: data.description,
-      price_cents: data.price_cents,
-      currency: data.currency,
-      status: data.status as 'draft' | 'published',
-      created_at: data.created_at,
-      stripe_price_id: (data as unknown as { stripe_price_id: string | null }).stripe_price_id ?? null,
+      id: d.id,
+      title: d.title,
+      slug: d.slug,
+      description: d.description,
+      price_cents: d.price_cents,
+      currency: d.currency,
+      status: d.status,
+      created_at: d.created_at,
+      stripe_price_id: d.stripe_price_id ?? null,
+      category: d.category ?? null,
+      level: d.level ?? null,
+      instructor_name: d.instructor_name ?? null,
+      long_description: d.long_description ?? null,
+      what_you_learn: d.what_you_learn ?? null,
       course_sections: sections,
     }
   }
