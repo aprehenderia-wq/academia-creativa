@@ -6,6 +6,17 @@ import { createSessionClient } from '@/lib/supabase/server'
 import { signLessonVideoUrl } from '@/lib/bunny'
 import { Classroom } from './classroom'
 
+async function getCompletedLessonIds(userId: string, lessonIds: string[]): Promise<string[]> {
+  if (!lessonIds.length) return []
+  const supabase = await createSessionClient()
+  const { data } = await supabase
+    .from('lesson_progress')
+    .select('lesson_id')
+    .eq('user_id', userId)
+    .in('lesson_id', lessonIds)
+  return (data ?? []).map((r) => r.lesson_id)
+}
+
 type Props = {
   params: Promise<{ slug: string }>
 }
@@ -47,6 +58,9 @@ export default async function ClassroomPage({ params }: Props) {
 
   // Pasamos al cliente solo lo necesario: nunca el video_id real, sino un
   // booleano "tiene vídeo". El id de la lección basta para pedir la URL firmada.
+  const allLessonIds = course.course_sections.flatMap((s) => s.lessons.map((l) => l.id))
+  const completedLessonIds = await getCompletedLessonIds(user.id, allLessonIds)
+
   const sections = course.course_sections.map((section) => ({
     id: section.id,
     title: section.title,
@@ -100,6 +114,7 @@ export default async function ClassroomPage({ params }: Props) {
             courseSlug={course.slug}
             sections={sections}
             initialVideo={initialVideo}
+            completedLessonIds={completedLessonIds}
           />
         ) : (
           <div className="text-center py-16 px-4 border border-border rounded-xl">

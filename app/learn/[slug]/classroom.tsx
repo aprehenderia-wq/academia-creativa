@@ -1,7 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
+import { completeLesson } from '@/app/actions/lessons'
 
 // ============================================================================
 // Reproductor del aula (lado cliente)
@@ -32,11 +33,13 @@ export function Classroom({
   courseSlug,
   sections,
   initialVideo,
+  completedLessonIds,
 }: {
   courseTitle: string
   courseSlug: string
   sections: ClassroomSection[]
   initialVideo: { lessonId: string; url: string } | null
+  completedLessonIds: string[]
 }) {
   const allLessons = sections.flatMap((s) => s.lessons)
   const initialLesson =
@@ -54,12 +57,26 @@ export function Classroom({
       ? null
       : 'Esta lección todavía no tiene video disponible.'
   )
+  const [completed, setCompleted] = useState<Set<string>>(
+    () => new Set(completedLessonIds)
+  )
+  const [isPending, startTransition] = useTransition()
 
   // Cada petición lleva un número. Si el alumno cambia de lección antes de que
   // llegue la respuesta anterior, descartamos la vieja (evita "saltos" de vídeo).
   const requestRef = useRef(0)
 
   const selectedLesson = allLessons.find((l) => l.id === selectedId) ?? null
+
+  function handleCompleteLesson() {
+    if (!selectedLesson || completed.has(selectedLesson.id)) return
+    startTransition(async () => {
+      const result = await completeLesson(selectedLesson.id)
+      if (result.completed) {
+        setCompleted((prev) => new Set([...prev, selectedLesson.id]))
+      }
+    })
+  }
 
   async function loadLesson(lesson: ClassroomLesson) {
     setSelectedId(lesson.id)
@@ -143,6 +160,27 @@ export function Classroom({
             />
           )}
         </div>
+
+        {/* Botón de completar lección */}
+        {selectedLesson && (
+          <div className="mt-4 flex items-center gap-3">
+            {completed.has(selectedLesson.id) ? (
+              <div className="flex items-center gap-2 text-small font-medium text-green-700">
+                <CheckIcon />
+                <span>Completada</span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleCompleteLesson}
+                disabled={isPending}
+                className="flex items-center gap-2 rounded-lg border border-terra-600 px-4 py-2 text-small font-medium text-terra-700 transition-colors hover:bg-terra-50 disabled:opacity-50"
+              >
+                {isPending ? 'Guardando…' : 'Marcar como completada'}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Lista de lecciones (barra lateral) ──────────────────────────── */}
@@ -157,6 +195,7 @@ export function Classroom({
               <ul className="flex flex-col gap-1">
                 {section.lessons.map((lesson) => {
                   const isSelected = lesson.id === selectedId
+                  const isDone = completed.has(lesson.id)
                   return (
                     <li key={lesson.id}>
                       <button
@@ -171,6 +210,9 @@ export function Classroom({
                       >
                         <LessonIcon hasVideo={lesson.hasVideo} active={isSelected} />
                         <span className="flex-1">{lesson.title}</span>
+                        {isDone && (
+                          <CheckIcon className="shrink-0 h-4 w-4 text-green-600" />
+                        )}
                       </button>
                     </li>
                   )
@@ -221,6 +263,14 @@ function PlayerMessage({
         </Link>
       )}
     </div>
+  )
+}
+
+function CheckIcon({ className = 'h-5 w-5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
   )
 }
 
