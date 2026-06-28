@@ -108,6 +108,59 @@ export async function getAdminCourses(): Promise<AdminCourse[]> {
   return courses.map((c) => ({ ...c, enrollment_count: countMap[c.id] ?? 0 }))
 }
 
+// ── Creación de curso ─────────────────────────────────────────────────────────
+
+export type CourseInput = {
+  title: string
+  slug: string
+  price_cents: number
+  currency: string
+  description: string
+  long_description?: string | null
+  category?: string | null
+  level?: string | null
+  instructor_name?: string | null
+  status: 'draft' | 'published'
+}
+
+export async function createCourse(
+  input: CourseInput
+): Promise<{ data: AdminCourse | null; error: string | null }> {
+  const supabase = createAdminClient()
+
+  // Check slug uniqueness
+  const { data: existing } = await supabase
+    .from('courses')
+    .select('id')
+    .eq('slug', input.slug)
+    .maybeSingle()
+
+  if (existing) {
+    return { data: null, error: 'El slug ya está en uso. Elige otro.' }
+  }
+
+  const { data, error } = await supabase
+    .from('courses')
+    .insert({
+      title: input.title,
+      slug: input.slug,
+      price_cents: input.price_cents,
+      currency: input.currency,
+      description: input.description,
+      long_description: input.long_description ?? null,
+      category: input.category ?? null,
+      level: input.level ?? null,
+      instructor_name: input.instructor_name ?? null,
+      status: input.status,
+    })
+    .select('id, title, category, price_cents, currency, status')
+    .single()
+
+  if (error) return { data: null, error: error.message }
+
+  return { data: { ...data, enrollment_count: 0 }, error: null }
+}
+
 // ── Transacciones recientes ───────────────────────────────────────────────────
 
 export type AdminTransaction = {
