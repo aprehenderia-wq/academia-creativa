@@ -20,6 +20,7 @@ export type Course = {
   instructor_name: string | null
   long_description: string | null
   what_you_learn: string[] | null
+  cover_image: string | null
 }
 
 // Tipos para el temario: lecciones y secciones con sus lecciones anidadas.
@@ -119,7 +120,7 @@ export const getCourseWithCurriculum = cache(
       .from('courses')
       .select(`
         id, title, slug, description, price_cents, currency, status, created_at, stripe_price_id,
-        category, level, instructor_name, long_description, what_you_learn,
+        category, level, instructor_name, long_description, what_you_learn, cover_image,
         course_sections ( id, title, position, lessons ( id, title, video_id, position ) )
       `)
       .eq('slug', slug)
@@ -160,6 +161,7 @@ export const getCourseWithCurriculum = cache(
       instructor_name: d.instructor_name ?? null,
       long_description: d.long_description ?? null,
       what_you_learn: d.what_you_learn ?? null,
+      cover_image: d.cover_image ?? null,
       course_sections: sections,
     }
   }

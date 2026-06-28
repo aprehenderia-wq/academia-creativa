@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { getCourseWithCurriculum, getEnrollment } from '@/lib/services/courses'
 import type { CourseSection } from '@/lib/services/courses'
 import { createSessionClient } from '@/lib/supabase/server'
@@ -19,7 +20,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const COVER_COLOR = '#C44D26'
+const CATEGORY_COLORS: Record<string, string> = {
+  'Branding': '#0F6E56',
+  'Ilustración': '#9A5F0F',
+  'Motion graphics': '#534AB7',
+}
+
+function getCoverColor(category: string | null): string {
+  if (!category) return '#C44D26'
+  return CATEGORY_COLORS[category] ?? '#C44D26'
+}
 
 function formatPrice(cents: number, currency: string): string {
   if (cents === 0) return 'Gratis'
@@ -45,19 +55,32 @@ export default async function CourseDetailPage({ params }: Props) {
   const hasCurriculum = course.course_sections.length > 0
   const categoryLabel = course.category ?? 'Diseño'
   const bodyDescription = course.long_description ?? course.description
+  const coverColor = getCoverColor(course.category)
 
   return (
     <main className="min-h-screen bg-background">
 
-      {/* ── Portada tipográfica ──────────────────────────────────────────── */}
-      <div
-        className="flex flex-col justify-between px-6 py-10 lg:px-16 lg:py-16"
-        style={{ backgroundColor: COVER_COLOR, minHeight: '260px' }}
-      >
-        <span className="font-sans text-caption font-medium uppercase tracking-widest text-white">
+      {/* ── Portada ─────────────────────────────────────────────────────── */}
+      <div className="relative flex flex-col justify-between px-6 py-10 lg:px-16 lg:py-16" style={{ minHeight: '300px' }}>
+        {course.cover_image ? (
+          <>
+            <Image
+              src={course.cover_image}
+              alt=""
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%)' }} />
+          </>
+        ) : (
+          <div className="absolute inset-0" style={{ backgroundColor: coverColor }} />
+        )}
+        <span className="relative z-10 font-sans text-caption font-medium uppercase tracking-widest text-white">
           {categoryLabel}
         </span>
-        <h1 className="mt-6 font-serif font-semibold text-h1 text-white leading-tight lg:text-display lg:max-w-3xl">
+        <h1 className="relative z-10 mt-6 font-serif font-semibold text-h1 text-white leading-tight lg:text-display lg:max-w-3xl">
           {course.title}
         </h1>
       </div>
