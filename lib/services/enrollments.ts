@@ -5,6 +5,8 @@ export type EnrolledCourse = {
   course_id: string
   title: string
   slug: string
+  category: string | null
+  cover_image: string | null
   enrolled_at: string
   progress: number
   completed_lessons: number
@@ -22,7 +24,9 @@ export async function getEnrolledCourses(userId: string): Promise<EnrolledCourse
       enrolled_at,
       courses (
         title,
-        slug
+        slug,
+        category,
+        cover_image
       )
     `)
     .eq('user_id', userId)
@@ -72,7 +76,7 @@ export async function getEnrolledCourses(userId: string): Promise<EnrolledCourse
 
   return enrollments.map(enrollment => {
     const courseRaw = enrollment.courses
-    const course = (Array.isArray(courseRaw) ? courseRaw[0] : courseRaw) as { title: string; slug: string } | null
+    const course = (Array.isArray(courseRaw) ? courseRaw[0] : courseRaw) as { title: string; slug: string; category: string | null; cover_image: string | null } | null
     const courseSectionIds = sectionsByCourse[enrollment.course_id] ?? []
     const courseLessonIds = courseSectionIds.flatMap(sid => lessonsBySection[sid] ?? [])
     const totalLessons = courseLessonIds.length
@@ -83,6 +87,8 @@ export async function getEnrolledCourses(userId: string): Promise<EnrolledCourse
       course_id: enrollment.course_id,
       title: course?.title ?? '',
       slug: course?.slug ?? '',
+      category: course?.category ?? null,
+      cover_image: course?.cover_image ?? null,
       enrolled_at: enrollment.enrolled_at,
       progress,
       completed_lessons: completedLessons,
