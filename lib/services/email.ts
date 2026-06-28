@@ -49,6 +49,21 @@ export async function sendWelcomeEmail({
   }
 }
 
+function emailLogoBlock(siteUrl: string): string {
+  return `
+  <table role="presentation" cellpadding="0" cellspacing="0">
+    <tr>
+      <td style="vertical-align:middle;padding-right:10px;">
+        <img src="${siteUrl}/logo-icon-inverted.svg" width="36" height="36" alt="" style="display:block;border-radius:7px;" />
+      </td>
+      <td style="vertical-align:middle;">
+        <p style="margin:0 0 2px;font-family:Georgia,serif;font-size:14px;font-weight:700;color:#ffffff;letter-spacing:0.02em;line-height:1.1;">Academia</p>
+        <p style="margin:0;font-family:Georgia,serif;font-size:14px;font-style:italic;font-weight:400;color:#FAECE7;letter-spacing:0.02em;line-height:1.1;">Creativa</p>
+      </td>
+    </tr>
+  </table>`
+}
+
 export function buildWelcomeEmailHtml({ studentName }: { studentName: string }): string {
   const catalogUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'}`
 
@@ -64,12 +79,10 @@ export function buildWelcomeEmailHtml({ studentName }: { studentName: string }):
       <td align="center">
         <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;border:1px solid #e8e0d8;overflow:hidden;max-width:100%;">
 
-          <!-- Cabecera con color de marca -->
+          <!-- Cabecera con logo -->
           <tr>
-            <td style="background:#C75C2A;padding:28px 40px;">
-              <p style="margin:0;font-family:Georgia,serif;font-size:20px;font-weight:600;color:#ffffff;letter-spacing:-0.01em;">
-                Academia Creativa
-              </p>
+            <td style="background:#C44D26;padding:24px 40px;">
+              ${emailLogoBlock(catalogUrl)}
             </td>
           </tr>
 
@@ -135,6 +148,7 @@ export function buildPurchaseEmailHtml({
   courseName: string
   courseUrl: string
 }): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -147,12 +161,10 @@ export function buildPurchaseEmailHtml({
       <td align="center">
         <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;border:1px solid #e8e0d8;overflow:hidden;max-width:100%;">
 
-          <!-- Cabecera con color de marca -->
+          <!-- Cabecera con logo -->
           <tr>
-            <td style="background:#C75C2A;padding:28px 40px;">
-              <p style="margin:0;font-family:Georgia,serif;font-size:20px;font-weight:600;color:#ffffff;letter-spacing:-0.01em;">
-                Academia Creativa
-              </p>
+            <td style="background:#C44D26;padding:24px 40px;">
+              ${emailLogoBlock(siteUrl)}
             </td>
           </tr>
 
@@ -241,6 +253,7 @@ export function buildInactivityReminderHtml({
   courseName: string
   courseUrl: string
 }): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -253,11 +266,10 @@ export function buildInactivityReminderHtml({
       <td align="center">
         <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;border:1px solid #e8e0d8;overflow:hidden;max-width:100%;">
 
+          <!-- Cabecera con logo -->
           <tr>
-            <td style="background:#C75C2A;padding:28px 40px;">
-              <p style="margin:0;font-family:Georgia,serif;font-size:20px;font-weight:600;color:#ffffff;letter-spacing:-0.01em;">
-                Academia Creativa
-              </p>
+            <td style="background:#C44D26;padding:24px 40px;">
+              ${emailLogoBlock(siteUrl)}
             </td>
           </tr>
 
