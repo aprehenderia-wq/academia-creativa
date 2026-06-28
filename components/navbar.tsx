@@ -10,13 +10,14 @@ export default async function Navbar() {
   } = await supabase.auth.getUser()
 
   let displayName: string | null = null
+  let isAdmin = false
   if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('full_name')
-      .eq('id', user.id)
-      .single()
-    displayName = profile?.full_name ?? user.email ?? null
+    const [profileRes, roleRes] = await Promise.all([
+      supabase.from('profiles').select('full_name').eq('id', user.id).single(),
+      supabase.from('user_roles').select('role').eq('user_id', user.id).eq('role', 'admin').maybeSingle(),
+    ])
+    displayName = profileRes.data?.full_name ?? user.email ?? null
+    isAdmin = !!roleRes.data
   }
 
   return (
@@ -32,6 +33,14 @@ export default async function Navbar() {
               <span className="text-small text-muted-foreground hidden sm:block truncate max-w-[160px]">
                 {displayName}
               </span>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="text-small font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Admin
+                </Link>
+              )}
               <Link
                 href="/dashboard"
                 className="text-small font-medium text-foreground hover:text-primary-strong transition-colors"
