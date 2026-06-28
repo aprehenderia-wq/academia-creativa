@@ -6,7 +6,7 @@ import { CourseCard } from "@/components/course-card"
 export const metadata: Metadata = {
   title: "Academia Creativa — Cursos de diseño online",
   description:
-    "Cursos online de diseño gráfico, branding, ilustración y motion graphics para creativos de habla hispana.",
+    "Cursos prácticos de diseño gráfico, branding, ilustración y motion graphics. Aprende las herramientas y el criterio para crear trabajo profesional que conecta.",
 }
 
 export default async function HomePage() {
@@ -30,13 +30,14 @@ export default async function HomePage() {
 
             {/* Titular */}
             <h1 className="font-serif text-display font-semibold text-foreground sm:text-[3.5rem] sm:leading-[1.1]">
-              Domina el diseño. Crea sin límites.
+              Aprende a diseñar con intención
             </h1>
 
             {/* Subtítulo */}
             <p className="font-sans text-body text-muted-foreground max-w-xl lg:max-w-none">
-              Cursos online de diseño gráfico, branding, ilustración y motion
-              graphics para creativos de habla hispana.
+              Cursos prácticos de diseño gráfico, branding, ilustración y motion
+              graphics. Aprende las herramientas y el criterio para crear trabajo
+              profesional que conecta.
             </p>
 
             {/* Botón CTA */}

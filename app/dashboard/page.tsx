@@ -40,10 +40,10 @@ export default async function DashboardPage() {
           </h1>
         </header>
 
-        {/* Certificados obtenidos */}
-        {certificates.length > 0 && (
-          <section className="mb-12">
-            <h2 className="font-serif text-h2 text-foreground mb-6">Mis certificados</h2>
+        {/* Certificados */}
+        <section className="mb-12">
+          <h2 className="font-serif text-h2 text-foreground mb-6">Mis certificados</h2>
+          {certificates.length > 0 ? (
             <div className="flex flex-col gap-3">
               {certificates.map((cert) => (
                 <div
@@ -76,23 +76,27 @@ export default async function DashboardPage() {
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          ) : (
+            <p className="text-small text-muted-foreground">
+              Completá todas las lecciones de un curso para obtener tu certificado.
+            </p>
+          )}
+        </section>
 
         {/* Cursos o empty state */}
         {enrolledCourses.length === 0 ? (
           <div className="flex flex-col items-center text-center py-20 gap-6">
             <p className="font-serif text-h2 text-foreground">
-              Aún no tienes cursos
+              Todavía no tenés cursos
             </p>
             <p className="text-body text-muted-foreground max-w-sm">
-              Explora el catálogo y empieza tu primer curso de diseño.
+              Explorá el catálogo y empezá tu primer curso.
             </p>
             <Link
-              href="/"
+              href="/#catalogo"
               className="bg-primary-button hover:bg-primary-strong text-white text-small font-medium px-6 py-3 rounded-lg transition-colors"
             >
-              Ver catálogo
+              Ver cursos
             </Link>
           </div>
         ) : (
