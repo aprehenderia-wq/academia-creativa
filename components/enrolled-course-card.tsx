@@ -41,9 +41,9 @@ export function EnrolledCourseCard({ course }: { course: EnrolledCourse }) {
           )}
         </div>
 
-        {/* Enlace al curso */}
+        {/* Enlace al aula del curso (reproductor de lecciones) */}
         <Link
-          href={`/courses/${course.slug}`}
+          href={`/learn/${course.slug}`}
           className="mt-auto bg-primary-button hover:bg-primary-strong text-white text-small font-medium px-5 py-2.5 rounded-lg transition-colors text-center"
         >
           Ir al curso
