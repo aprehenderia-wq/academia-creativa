@@ -98,7 +98,7 @@ export default async function HomePage() {
             <h2 className="font-serif text-h1 font-semibold text-foreground">
               Cursos
             </h2>
-            <div className="w-12 h-[3px] bg-accent rounded-full mt-3" />
+            <div className="w-24 h-[3px] bg-accent rounded-full mt-3" />
             <p className="mt-3 text-small text-muted-foreground">
               Todo lo que necesitas para crecer como diseñador.
             </p>
