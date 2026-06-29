@@ -1,17 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { EnrolledCourse } from '@/lib/services/enrollments'
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Branding': '#0F6E56',
-  'Ilustración': '#9A5F0F',
-  'Motion graphics': '#534AB7',
-}
-
-function getCoverColor(category: string | null): string {
-  if (!category) return '#C44D26'
-  return CATEGORY_COLORS[category] ?? '#C44D26'
-}
+import { getCoverColor } from '@/lib/constants/category-colors'
 
 export function EnrolledCourseCard({ course }: { course: EnrolledCourse }) {
   const coverColor = getCoverColor(course.category)

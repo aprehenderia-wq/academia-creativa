@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { DEFAULT_COVER_COLOR } from '@/lib/constants/category-colors'
 
 export const runtime = 'edge'
 
@@ -23,7 +24,7 @@ export function GET() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#C44D26',
+          backgroundColor: DEFAULT_COVER_COLOR,
           gap: '28px',
         }}
       >

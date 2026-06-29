@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Course } from '@/lib/services/courses'
+import { getCoverColor } from '@/lib/constants/category-colors'
 
 function formatPrice(cents: number, currency: string): string {
   if (cents === 0) return 'Gratis'
@@ -8,17 +9,6 @@ function formatPrice(cents: number, currency: string): string {
     style: 'currency',
     currency: currency.toUpperCase(),
   }).format(cents / 100)
-}
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Branding': '#0F6E56',
-  'Ilustración': '#9A5F0F',
-  'Motion graphics': '#534AB7',
-}
-
-function getCoverColor(category: string | null): string {
-  if (!category) return '#C44D26'
-  return CATEGORY_COLORS[category] ?? '#C44D26'
 }
 
 export function CourseCard({ course }: { course: Course }) {

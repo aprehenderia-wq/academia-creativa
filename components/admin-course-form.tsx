@@ -2,9 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-const CATEGORIES = ['Diseño gráfico', 'Branding', 'Ilustración', 'Motion graphics']
-const LEVELS = ['Básico', 'Intermedio', 'Avanzado']
+import { CATEGORIES, LEVELS } from '@/lib/constants/courses'
 
 function slugify(text: string): string {
   return text

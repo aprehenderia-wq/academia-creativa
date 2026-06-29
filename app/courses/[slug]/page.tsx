@@ -5,6 +5,7 @@ import { getCourseWithCurriculum, getEnrollment } from '@/lib/services/courses'
 import type { CourseSection } from '@/lib/services/courses'
 import { createSessionClient } from '@/lib/supabase/server'
 import { BuyButton } from '@/components/buy-button'
+import { getCoverColor } from '@/lib/constants/category-colors'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -25,17 +26,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : [{ url: '/og', width: 1200, height: 630, alt: 'Academia Creativa' }],
     },
   }
-}
-
-const CATEGORY_COLORS: Record<string, string> = {
-  'Branding': '#0F6E56',
-  'Ilustración': '#9A5F0F',
-  'Motion graphics': '#534AB7',
-}
-
-function getCoverColor(category: string | null): string {
-  if (!category) return '#C44D26'
-  return CATEGORY_COLORS[category] ?? '#C44D26'
 }
 
 function formatPrice(cents: number, currency: string): string {
