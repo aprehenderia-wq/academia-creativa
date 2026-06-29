@@ -90,7 +90,6 @@ export function AdminCourseForm() {
         return
       }
       router.push('/admin/cursos')
-      router.refresh()
     } catch {
       setError('No se pudo conectar con el servidor.')
     } finally {
@@ -252,7 +251,7 @@ export function AdminCourseForm() {
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 function inputCls(hasError: boolean, isTextarea = false) {
-  return `w-full ${isTextarea ? 'py-2' : 'h-10'} px-3 rounded-md border bg-card text-foreground text-small placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 transition-colors ${
+  return `w-full ${isTextarea ? 'py-2' : 'h-11'} px-3 rounded-md border bg-card text-foreground text-small placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 transition-colors ${
     hasError ? 'border-red-400 focus:ring-red-300' : 'border-border'
   }`
 }

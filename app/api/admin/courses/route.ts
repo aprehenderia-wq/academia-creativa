@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
   if (!slug || typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) {
     return NextResponse.json({ error: 'El slug debe contener solo minúsculas, números y guiones.' }, { status: 400 })
   }
-  if (typeof price_cents !== 'number' || price_cents < 0) {
-    return NextResponse.json({ error: 'El precio debe ser un número mayor o igual a 0.' }, { status: 400 })
+  if (typeof price_cents !== 'number' || !Number.isInteger(price_cents) || price_cents < 0) {
+    return NextResponse.json({ error: 'price_cents debe ser un entero mayor o igual a cero' }, { status: 400 })
   }
   if (!description || typeof description !== 'string' || !description.trim()) {
     return NextResponse.json({ error: 'La descripción corta es obligatoria.' }, { status: 400 })

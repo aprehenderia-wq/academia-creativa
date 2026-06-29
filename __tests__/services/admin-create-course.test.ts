@@ -37,7 +37,6 @@ describe('createCourse', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('returns created course on success', async () => {
-    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null }) // slug free
     mockInsert.mockReturnValue({
       select: vi.fn().mockReturnValue({
         single: mockSingle,
@@ -56,7 +55,12 @@ describe('createCourse', () => {
   })
 
   it('returns error when slug already exists', async () => {
-    mockMaybeSingle.mockResolvedValueOnce({ data: { id: 'existing' }, error: null })
+    mockInsert.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        single: mockSingle,
+      }),
+    })
+    mockSingle.mockResolvedValueOnce({ data: null, error: { code: '23505', message: 'duplicate key value' } })
 
     const result = await createCourse(validInput)
     expect(result.error).toBe('El slug ya está en uso. Elige otro.')
@@ -64,7 +68,6 @@ describe('createCourse', () => {
   })
 
   it('returns error when Supabase insert fails', async () => {
-    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null })
     mockInsert.mockReturnValue({
       select: vi.fn().mockReturnValue({
         single: mockSingle,

@@ -92,20 +92,22 @@ export type AdminCourse = {
 export async function getAdminCourses(): Promise<AdminCourse[]> {
   const supabase = createAdminClient()
 
-  const [coursesRes, enrollmentsRes] = await Promise.all([
-    supabase.from('courses').select('id, title, category, price_cents, currency, status').order('created_at', { ascending: false }),
-    supabase.from('enrollments').select('course_id'),
-  ])
+  const { data: courses, error } = await supabase
+    .from('courses')
+    .select('id, title, category, price_cents, currency, status, enrollments(count)')
+    .order('created_at', { ascending: false })
 
-  const courses = coursesRes.data ?? []
-  const enrollments = enrollmentsRes.data ?? []
+  if (error) return []
 
-  const countMap = enrollments.reduce<Record<string, number>>((acc, e) => {
-    acc[e.course_id] = (acc[e.course_id] ?? 0) + 1
-    return acc
-  }, {})
-
-  return courses.map((c) => ({ ...c, enrollment_count: countMap[c.id] ?? 0 }))
+  return (courses ?? []).map((c) => ({
+    id: c.id,
+    title: c.title,
+    category: c.category,
+    price_cents: c.price_cents,
+    currency: c.currency,
+    status: c.status,
+    enrollment_count: (c.enrollments as unknown as { count: number }[])[0]?.count ?? 0,
+  }))
 }
 
 // ── Creación de curso ─────────────────────────────────────────────────────────
@@ -128,16 +130,6 @@ export async function createCourse(
 ): Promise<{ data: AdminCourse | null; error: string | null }> {
   const supabase = createAdminClient()
 
-  // Check slug uniqueness
-  const { data: existing, error: slugError } = await supabase
-    .from('courses')
-    .select('id')
-    .eq('slug', input.slug)
-    .maybeSingle()
-
-  if (slugError) return { data: null, error: slugError.message }
-  if (existing) return { data: null, error: 'El slug ya está en uso. Elige otro.' }
-
   const { data, error } = await supabase
     .from('courses')
     .insert({
@@ -155,7 +147,10 @@ export async function createCourse(
     .select('id, title, category, price_cents, currency, status')
     .single()
 
-  if (error) return { data: null, error: error.message }
+  if (error) {
+    if (error.code === '23505') return { data: null, error: 'El slug ya está en uso. Elige otro.' }
+    return { data: null, error: error.message }
+  }
 
   return { data: { ...data, enrollment_count: 0 }, error: null }
 }
