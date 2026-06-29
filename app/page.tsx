@@ -2,11 +2,14 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { getPublishedCourses } from "@/lib/services/courses"
 import { CourseCard } from "@/components/course-card"
+import { FadeIn } from "@/components/fade-in"
 
 export const metadata: Metadata = {
-  title: "Academia Creativa — Cursos de diseño online",
+  title: {
+    absolute: 'Academia Creativa — Cursos de diseño digital',
+  },
   description:
-    "Cursos online de diseño gráfico, branding, ilustración y motion graphics para creativos de habla hispana.",
+    'Cursos prácticos de diseño gráfico, branding, ilustración y motion graphics. Aprende las herramientas y el criterio para crear trabajo profesional que conecta.',
 }
 
 export default async function HomePage() {
@@ -30,19 +33,20 @@ export default async function HomePage() {
 
             {/* Titular */}
             <h1 className="font-serif text-display font-semibold text-foreground sm:text-[3.5rem] sm:leading-[1.1]">
-              Domina el diseño. Crea sin límites.
+              Aprende a diseñar con intención
             </h1>
 
             {/* Subtítulo */}
             <p className="font-sans text-body text-muted-foreground max-w-xl lg:max-w-none">
-              Cursos online de diseño gráfico, branding, ilustración y motion
-              graphics para creativos de habla hispana.
+              Cursos prácticos de diseño gráfico, branding, ilustración y motion
+              graphics. Aprende las herramientas y el criterio para crear trabajo
+              profesional que conecta.
             </p>
 
             {/* Botón CTA */}
             <a
               href="#catalogo"
-              className="font-sans font-medium text-white text-small px-7 py-3 rounded-md transition-colors bg-primary-button hover:bg-primary-strong"
+              className="font-sans font-medium text-white text-small px-7 py-3 rounded-md transition-all duration-200 bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95"
             >
               Explorar cursos
             </a>
@@ -58,7 +62,7 @@ export default async function HomePage() {
                   key={i}
                   className="flex-1 flex flex-col items-center py-5 px-4 gap-1 bg-terra-50"
                 >
-                  <span className="font-serif font-semibold text-[1.25rem] leading-none text-terra-700">
+                  <span className="font-serif font-semibold text-h3 leading-none text-terra-700">
                     {stat.value}
                   </span>
                   <span className="font-sans text-small text-muted-foreground">
@@ -103,8 +107,10 @@ export default async function HomePage() {
             <EmptyState />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+              {courses.map((course, i) => (
+                <FadeIn key={course.id} delay={i * 80} className="h-full">
+                  <CourseCard course={course} />
+                </FadeIn>
               ))}
             </div>
           )}

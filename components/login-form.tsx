@@ -73,7 +73,7 @@ export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
       <button
         type="submit"
         disabled={loading}
-        className="h-11 bg-primary-button text-white font-medium rounded-md hover:bg-primary-strong transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="h-11 bg-primary-button text-white font-medium rounded-md hover:bg-primary-strong hover:shadow-md active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2"
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         {loading ? 'Entrando...' : 'Iniciar sesión'}

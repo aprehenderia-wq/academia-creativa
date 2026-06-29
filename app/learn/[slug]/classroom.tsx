@@ -204,7 +204,7 @@ export function Classroom({
                 type="button"
                 onClick={handleCompleteLesson}
                 disabled={isPending}
-                className="flex items-center gap-2 rounded-lg border border-terra-600 px-4 py-2 text-small font-medium text-terra-700 transition-colors hover:bg-terra-50 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg border border-terra-600 px-4 py-3 text-small font-medium text-terra-700 transition-colors hover:bg-terra-50 disabled:opacity-50"
               >
                 {isPending ? 'Guardando…' : 'Marcar como completada'}
               </button>
@@ -232,7 +232,7 @@ export function Classroom({
                         type="button"
                         onClick={() => loadLesson(lesson)}
                         aria-current={isSelected}
-                        className={`w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-small transition-colors ${
+                        className={`w-full flex items-center gap-3 rounded-lg px-3 py-3 text-left text-small transition-colors ${
                           isSelected
                             ? 'bg-terra-50 text-terra-700 font-medium'
                             : 'text-foreground hover:bg-muted'

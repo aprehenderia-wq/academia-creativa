@@ -2,7 +2,7 @@ import Link from 'next/link'
 import LoginForm from '@/components/login-form'
 
 export const metadata = {
-  title: 'Iniciar sesión — Academia Creativa',
+  title: 'Iniciar sesión',
 }
 
 type Props = {
