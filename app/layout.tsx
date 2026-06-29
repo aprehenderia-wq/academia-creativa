@@ -18,7 +18,7 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'
 const OG_DESCRIPTION = 'Cursos de diseño digital para creativos que quieren vivir de lo que aman.'
 
 export const metadata: Metadata = {
