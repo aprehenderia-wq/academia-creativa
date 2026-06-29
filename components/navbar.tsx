@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createSessionClient } from '@/lib/supabase/server'
 import LogoutButton from '@/components/logout-button'
 import { LogoMark } from '@/components/logo'
+import { MobileMenu } from '@/components/mobile-menu'
 
 export default async function Navbar() {
   const supabase = await createSessionClient()
@@ -33,8 +34,8 @@ export default async function Navbar() {
           <LogoMark size={34} />
         </Link>
 
-        {/* Navegación derecha */}
-        <div className="flex items-center gap-1">
+        {/* Navegación derecha — desktop */}
+        <div className="hidden md:flex items-center gap-1">
           {user ? (
             <>
               {/* Nombre: contexto, no acción — separado del resto con borde */}
@@ -79,6 +80,13 @@ export default async function Navbar() {
             </>
           )}
         </div>
+
+        {/* Navegación móvil — hamburguesa */}
+        <MobileMenu
+          displayName={displayName}
+          isAdmin={isAdmin}
+          isLoggedIn={!!user}
+        />
 
       </div>
     </header>
