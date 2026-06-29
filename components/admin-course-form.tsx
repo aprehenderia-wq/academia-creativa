@@ -234,13 +234,13 @@ export function AdminCourseForm() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-200"
+          className="bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200"
         >
           {loading ? 'Creando curso…' : 'Crear curso'}
         </button>
         <a
           href="/admin/cursos"
-          className="text-small text-muted-foreground hover:text-foreground transition-colors"
+          className="text-small text-muted-foreground hover:text-foreground transition-colors inline-flex items-center py-3"
         >
           Cancelar
         </a>

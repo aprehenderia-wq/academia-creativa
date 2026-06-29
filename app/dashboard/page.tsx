@@ -67,7 +67,7 @@ export default async function DashboardPage() {
                   <a
                     href={`/api/certificates/${cert.id}/download`}
                     download
-                    className="shrink-0 flex items-center gap-2 rounded-lg border border-terra-600 px-4 py-2 text-small font-medium text-terra-700 transition-colors hover:bg-terra-50"
+                    className="shrink-0 flex items-center gap-2 rounded-lg border border-terra-600 px-4 py-3 text-small font-medium text-terra-700 transition-colors hover:bg-terra-50"
                   >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v12m0 0l-3.5-3.5M12 16l3.5-3.5M4 20h16" />
