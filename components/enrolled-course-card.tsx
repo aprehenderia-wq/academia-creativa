@@ -36,13 +36,13 @@ export function EnrolledCourseCard({ course }: { course: EnrolledCourse }) {
         <div className="flex flex-col gap-1.5">
           <div className="flex justify-between items-center">
             <span className="text-caption text-muted-foreground">Progreso</span>
-            <span className="text-caption font-medium text-primary-strong">
+            <span className="text-caption font-medium text-accent">
               {course.progress}%
             </span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary-button rounded-full transition-all duration-300"
+              className="h-full bg-accent rounded-full transition-all duration-300"
               style={{ width: `${course.progress}%` }}
             />
           </div>
@@ -55,7 +55,8 @@ export function EnrolledCourseCard({ course }: { course: EnrolledCourse }) {
 
         <Link
           href={`/learn/${course.slug}`}
-          className="mt-auto bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white text-small font-medium px-5 py-2.5 rounded-lg transition-all duration-200 text-center"
+          style={{ backgroundColor: coverColor }}
+          className="mt-auto hover:brightness-90 hover:shadow-md active:scale-95 text-white text-small font-medium px-5 py-2.5 rounded-lg transition-all duration-200 text-center"
         >
           Ir al curso
         </Link>

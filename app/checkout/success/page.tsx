@@ -52,7 +52,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
 
         {/* Icono de confirmación */}
         <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-full bg-terra-50 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-success-bg flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -91,7 +91,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         <div className="flex flex-col gap-3">
           <Link
             href={courseHref}
-            className="w-full bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white font-medium py-3 rounded-lg transition-all duration-200 text-center"
+            className="w-full bg-accent hover:brightness-90 hover:shadow-md active:scale-95 text-white font-medium py-3 rounded-lg transition-all duration-200 text-center"
           >
             {courseLinkLabel}
           </Link>

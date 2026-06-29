@@ -22,7 +22,7 @@ export default function RegisterPage() {
           ¿Ya tienes cuenta?{' '}
           <Link
             href="/auth/login"
-            className="text-primary-strong hover:underline"
+            className="text-accent hover:underline"
           >
             Inicia sesión
           </Link>

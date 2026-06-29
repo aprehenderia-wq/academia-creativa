@@ -28,7 +28,7 @@ export default async function LoginPage({ searchParams }: Props) {
           ¿No tienes cuenta?{' '}
           <Link
             href="/auth/register"
-            className="text-primary-strong hover:underline"
+            className="text-accent hover:underline"
           >
             Regístrate
           </Link>

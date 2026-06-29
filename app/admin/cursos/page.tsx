@@ -26,7 +26,7 @@ export default async function AdminCursos() {
         </div>
         <Link
           href="/admin/cursos/nuevo"
-          className="shrink-0 bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white text-small font-medium px-4 py-2 rounded-lg transition-all duration-200"
+          className="shrink-0 bg-accent hover:brightness-90 hover:shadow-md active:scale-95 text-white text-small font-medium px-4 py-2 rounded-lg transition-all duration-200"
         >
           + Nuevo curso
         </Link>

@@ -34,8 +34,8 @@ export function AdminNav() {
                 href={item.href}
                 className={`text-small font-medium px-3 py-2 rounded-md transition-colors ${
                   isActive
-                    ? 'bg-terra-50 text-terra-700'
-                    : 'text-foreground hover:bg-terra-50 hover:text-primary-strong'
+                    ? 'bg-success-bg text-accent'
+                    : 'text-foreground hover:bg-success-bg hover:text-accent'
                 }`}
               >
                 {item.label}
@@ -67,8 +67,8 @@ export function AdminNav() {
                 href={item.href}
                 className={`text-small font-medium px-3 py-3 rounded-md whitespace-nowrap transition-colors ${
                   isActive
-                    ? 'bg-terra-50 text-terra-700'
-                    : 'text-foreground hover:bg-terra-50 hover:text-primary-strong'
+                    ? 'bg-success-bg text-accent'
+                    : 'text-foreground hover:bg-success-bg hover:text-accent'
                 }`}
               >
                 {item.label}

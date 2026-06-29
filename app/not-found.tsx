@@ -19,7 +19,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200"
+        className="bg-accent hover:brightness-90 hover:shadow-md active:scale-95 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200"
       >
         Volver al inicio
       </Link>

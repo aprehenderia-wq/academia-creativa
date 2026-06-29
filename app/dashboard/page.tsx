@@ -95,7 +95,7 @@ export default async function DashboardPage() {
             </p>
             <Link
               href="/#catalogo"
-              className="bg-primary-button hover:bg-primary-strong text-white text-small font-medium px-6 py-3 rounded-lg transition-colors"
+              className="border border-border text-muted-foreground hover:text-foreground hover:bg-muted text-small font-medium px-6 py-3 rounded-lg transition-colors"
             >
               Ver cursos
             </Link>

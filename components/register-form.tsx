@@ -54,7 +54,7 @@ export default function RegisterForm() {
           disabled={loading}
           autoComplete="name"
           placeholder="Tu nombre completo"
-          className="h-11 px-3 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+          className="h-11 px-3 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
         />
       </div>
 
@@ -70,7 +70,7 @@ export default function RegisterForm() {
           disabled={loading}
           autoComplete="email"
           placeholder="tu@email.com"
-          className="h-11 px-3 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+          className="h-11 px-3 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
         />
       </div>
 
@@ -87,7 +87,7 @@ export default function RegisterForm() {
           disabled={loading}
           autoComplete="new-password"
           placeholder="Mínimo 6 caracteres"
-          className="h-11 px-3 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+          className="h-11 px-3 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
         />
       </div>
 
