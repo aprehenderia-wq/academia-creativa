@@ -27,7 +27,7 @@ export default async function HomePage() {
           {/* Columna izquierda — texto */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-6">
             {/* Badge */}
-            <span className="font-sans text-caption font-medium uppercase tracking-widest px-3 py-1 rounded-md bg-terra-50 text-terra-700">
+            <span className="font-sans text-caption font-medium uppercase tracking-widest px-3 py-1 rounded-md bg-success-bg text-accent">
               Nueva temporada · 2026
             </span>
 
@@ -54,15 +54,15 @@ export default async function HomePage() {
             {/* Estadísticas */}
             <div className="w-full mt-2 flex flex-col sm:flex-row gap-px rounded-xl overflow-hidden border border-border">
               {[
-                { value: "2.4k+", label: "alumnos" },
-                { value: "4.9", label: "valoración media" },
-                { value: "12", label: "cursos" },
+                { value: "2.4k+", label: "alumnos", color: "#D85A30" },
+                { value: "4.9", label: "valoración media", color: "#0F6E56" },
+                { value: "12", label: "cursos", color: "#9A5F0F" },
               ].map((stat, i) => (
                 <div
                   key={i}
                   className="flex-1 flex flex-col items-center py-5 px-4 gap-1 bg-terra-50"
                 >
-                  <span className="font-serif font-semibold text-h3 leading-none text-terra-700">
+                  <span className="font-serif font-semibold text-h3 leading-none" style={{ color: stat.color }}>
                     {stat.value}
                   </span>
                   <span className="font-sans text-small text-muted-foreground">
@@ -98,7 +98,8 @@ export default async function HomePage() {
             <h2 className="font-serif text-h1 font-semibold text-foreground">
               Cursos
             </h2>
-            <p className="mt-2 text-small text-muted-foreground">
+            <div className="w-12 h-[3px] bg-accent rounded-full mt-3" />
+            <p className="mt-3 text-small text-muted-foreground">
               Todo lo que necesitas para crecer como diseñador.
             </p>
           </header>

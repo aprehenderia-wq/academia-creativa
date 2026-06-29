@@ -76,7 +76,8 @@ export function CourseCard({ course }: { course: Course }) {
           </span>
           <Link
             href={`/courses/${course.slug}`}
-            className="bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white text-small font-medium px-5 py-2.5 rounded-lg transition-all duration-200"
+            style={{ backgroundColor: coverColor }}
+            className="hover:brightness-90 hover:shadow-md active:scale-95 text-white text-small font-medium px-5 py-2.5 rounded-lg transition-all duration-200"
           >
             Ver curso
           </Link>
