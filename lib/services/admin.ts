@@ -50,16 +50,16 @@ export async function getAdminStudents(): Promise<AdminStudent[]> {
   const enrollmentMap = new Map<string, { count: number; latest: string; titles: string[] }>()
 
   for (const e of enrollments) {
-    const course = e.courses as { title: string } | null
+    const title = (e.courses as { title: string }[] | null)?.[0]?.title ?? null
     const existing = enrollmentMap.get(e.user_id)
     if (existing) {
       existing.count++
-      if (course) existing.titles.push(course.title)
+      if (title) existing.titles.push(title)
     } else {
       enrollmentMap.set(e.user_id, {
         count: 1,
         latest: e.enrolled_at,
-        titles: course ? [course.title] : [],
+        titles: title ? [title] : [],
       })
     }
   }
@@ -187,7 +187,7 @@ export async function getAdminTransactions(): Promise<AdminTransaction[]> {
   const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]))
 
   return enrollments.map((e) => {
-    const course = e.courses as { title: string; price_cents: number; currency: string } | null
+    const course = (e.courses as { title: string; price_cents: number; currency: string }[] | null)?.[0] ?? null
     const profile = profileMap.get(e.user_id)
     return {
       id: e.id,
