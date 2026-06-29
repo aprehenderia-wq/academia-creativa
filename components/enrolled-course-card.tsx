@@ -1,22 +1,44 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { EnrolledCourse } from '@/lib/services/enrollments'
 
-// Color provisional hasta que exista la columna `category` en la BD.
-// Cuando se añada, mapear la categoría al color correspondiente del sistema de diseño.
-const COVER_COLOR = '#C44D26'
+const CATEGORY_COLORS: Record<string, string> = {
+  'Branding': '#0F6E56',
+  'Ilustración': '#9A5F0F',
+  'Motion graphics': '#534AB7',
+}
+
+function getCoverColor(category: string | null): string {
+  if (!category) return '#C44D26'
+  return CATEGORY_COLORS[category] ?? '#C44D26'
+}
 
 export function EnrolledCourseCard({ course }: { course: EnrolledCourse }) {
+  const coverColor = getCoverColor(course.category)
+
   return (
-    <article className="bg-card rounded-xl border border-border flex flex-col overflow-hidden">
-      {/* Portada tipográfica */}
-      <div
-        className="flex flex-col justify-end p-5"
-        style={{ backgroundColor: COVER_COLOR, aspectRatio: '16 / 10' }}
-      >
-        <p className="font-serif font-semibold text-xl text-white leading-tight line-clamp-3">
-          {course.title}
-        </p>
-      </div>
+    <article className="bg-card rounded-xl border border-border flex flex-col overflow-hidden h-full transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg">
+      {/* Portada */}
+      {course.cover_image ? (
+        <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
+          <Image
+            src={course.cover_image}
+            alt={`Portada del curso ${course.title}`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        </div>
+      ) : (
+        <div
+          className="flex flex-col justify-end p-5"
+          style={{ backgroundColor: coverColor, aspectRatio: '16 / 10' }}
+        >
+          <p className="font-serif font-semibold text-xl text-white leading-tight line-clamp-3">
+            {course.title}
+          </p>
+        </div>
+      )}
 
       {/* Cuerpo */}
       <div className="flex flex-col flex-1 p-5 gap-4">
@@ -41,10 +63,9 @@ export function EnrolledCourseCard({ course }: { course: EnrolledCourse }) {
           )}
         </div>
 
-        {/* Enlace al aula del curso (reproductor de lecciones) */}
         <Link
           href={`/learn/${course.slug}`}
-          className="mt-auto bg-primary-button hover:bg-primary-strong text-white text-small font-medium px-5 py-2.5 rounded-lg transition-colors text-center"
+          className="mt-auto bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white text-small font-medium px-5 py-2.5 rounded-lg transition-all duration-200 text-center"
         >
           Ir al curso
         </Link>

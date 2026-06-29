@@ -68,7 +68,7 @@ export function BuyButton({ courseId, courseSlug, isEnrolled, userId, className 
         type="button"
         onClick={handleBuy}
         disabled={loading}
-        className={`bg-primary-button hover:bg-primary-strong disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-colors ${className ?? ''}`}
+        className={`bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-medium py-3 rounded-lg transition-all duration-200 ${className ?? ''}`}
       >
         {loading ? 'Procesando…' : 'Comprar'}
       </button>

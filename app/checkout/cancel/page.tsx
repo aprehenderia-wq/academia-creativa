@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Pago cancelado — Academia Creativa',
+  title: 'Pago cancelado',
 }
 
 type Props = {
@@ -45,7 +45,7 @@ export default async function CheckoutCancelPage({ searchParams }: Props) {
           <h1 className="font-serif font-semibold text-h1 text-foreground">
             Pago cancelado
           </h1>
-          <p className="text-base text-muted-foreground leading-relaxed">
+          <p className="text-body text-muted-foreground leading-relaxed">
             No se ha realizado ningún cargo. Puedes intentarlo de nuevo
             cuando quieras.
           </p>
@@ -55,7 +55,7 @@ export default async function CheckoutCancelPage({ searchParams }: Props) {
         <div className="flex flex-col gap-3">
           <Link
             href={backHref}
-            className="w-full bg-primary-button hover:bg-primary-strong text-white font-medium py-3 rounded-lg transition-colors text-center"
+            className="w-full bg-primary-button hover:bg-primary-strong hover:shadow-md active:scale-95 text-white font-medium py-3 rounded-lg transition-all duration-200 text-center"
           >
             {backLabel}
           </Link>

@@ -34,6 +34,11 @@ describe('buildWelcomeEmailHtml', () => {
     expect(html).toContain('<!DOCTYPE html>')
     expect(html).toContain('</html>')
   })
+
+  it('incluye el logo en la cabecera del email', () => {
+    expect(html).toContain('logo-icon-inverted.svg')
+    expect(html).toContain('<img')
+  })
 })
 
 // ─── buildPurchaseEmailHtml ───────────────────────────────────────────────────
@@ -63,6 +68,11 @@ describe('buildPurchaseEmailHtml', () => {
     expect(html).toContain('<!DOCTYPE html>')
     expect(html).toContain('</html>')
   })
+
+  it('incluye el logo en la cabecera del email', () => {
+    expect(html).toContain('logo-icon-inverted.svg')
+    expect(html).toContain('<img')
+  })
 })
 
 // ─── buildInactivityReminderHtml ─────────────────────────────────────────────
@@ -91,5 +101,10 @@ describe('buildInactivityReminderHtml', () => {
   it('es un documento HTML válido (tiene etiquetas básicas)', () => {
     expect(html).toContain('<!DOCTYPE html>')
     expect(html).toContain('</html>')
+  })
+
+  it('incluye el logo en la cabecera del email', () => {
+    expect(html).toContain('logo-icon-inverted.svg')
+    expect(html).toContain('<img')
   })
 })
