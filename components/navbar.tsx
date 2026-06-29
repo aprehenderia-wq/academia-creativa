@@ -47,7 +47,7 @@ export default async function Navbar() {
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden sm:block text-small font-medium text-muted-foreground hover:text-foreground hover:bg-terra-50 px-3 py-2 rounded-md transition-colors"
+                  className="text-small font-medium text-muted-foreground hover:text-foreground hover:bg-terra-50 px-3 py-3 rounded-md transition-colors"
                 >
                   Admin
                 </Link>
@@ -55,7 +55,7 @@ export default async function Navbar() {
 
               <Link
                 href="/dashboard"
-                className="text-small font-medium text-foreground hover:text-primary-strong hover:bg-terra-50 px-3 py-2 rounded-md transition-colors"
+                className="text-small font-medium text-foreground hover:text-primary-strong hover:bg-terra-50 px-3 py-3 rounded-md transition-colors"
               >
                 Mis cursos
               </Link>
@@ -66,13 +66,13 @@ export default async function Navbar() {
             <>
               <Link
                 href="/auth/login"
-                className="text-small font-medium text-muted-foreground hover:text-foreground px-3 py-2 rounded-md transition-colors"
+                className="text-small font-medium text-muted-foreground hover:text-foreground px-3 py-3 rounded-md transition-colors"
               >
                 Iniciar sesión
               </Link>
               <Link
                 href="/auth/register"
-                className="text-small font-medium text-white bg-primary-button hover:bg-primary-strong px-4 py-2.5 rounded-lg transition-colors"
+                className="text-small font-medium text-white bg-primary-button hover:bg-primary-strong px-4 py-3 rounded-lg transition-colors"
               >
                 Registrarse
               </Link>

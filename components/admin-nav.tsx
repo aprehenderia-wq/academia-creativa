@@ -65,7 +65,7 @@ export function AdminNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-small font-medium px-3 py-2 rounded-md whitespace-nowrap transition-colors ${
+                className={`text-small font-medium px-3 py-3 rounded-md whitespace-nowrap transition-colors ${
                   isActive
                     ? 'bg-terra-50 text-terra-700'
                     : 'text-foreground hover:bg-terra-50 hover:text-primary-strong'
@@ -77,7 +77,7 @@ export function AdminNav() {
           })}
           <Link
             href="/"
-            className="text-small text-muted-foreground px-3 py-2 whitespace-nowrap ml-auto"
+            className="text-small text-muted-foreground px-3 py-3 whitespace-nowrap ml-auto"
           >
             ← Sitio
           </Link>
