@@ -1,56 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Academia Creativa
 
-## Getting Started
+Plataforma web de cursos de diseño digital. Permite explorar un catálogo de
+cursos, comprarlos, acceder al contenido en vídeo, seguir el progreso y
+descargar certificados de finalización.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS · Supabase ·
+Stripe · Resend · Bunny.net · Vercel
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Entornos
+
+| Entorno | URL | Rama |
+|---|---|---|
+| **Producción** | https://academia-creativa-one.vercel.app | `main` |
+| **Staging** | https://academia-creativa-git-develop-aprehenderia-9285s-projects.vercel.app | `develop` |
+
+Cada push a `develop` actualiza el entorno de staging automáticamente.
+Los merges a `main` actualizan producción.
+
+---
+
+## Flujo de trabajo (Git)
+
+```
+feature/<nombre>  →  develop  →  main
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Crear rama `feature/nombre` desde `develop`.
+2. Desarrollar y probar en local.
+3. Merge a `develop` → verificar en staging.
+4. Solo cuando está validado → merge a `main` → producción.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Nunca se trabaja directamente sobre `main`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Arrancar en local
 
-To learn more about Next.js, take a look at the following resources:
+**Requisitos:** Node.js 20+ · cuenta en Supabase, Stripe y Bunny.net · Stripe CLI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# 1. Instalar dependencias
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 2. Configurar entorno
+cp .env.example .env.local
+# Rellenar todos los valores en .env.local
 
-## Deploy on Vercel
+# 3. Inicializar la base de datos
+# Supabase → SQL Editor → ejecutar supabase/schema.sql
+# Luego ejecutar supabase/migrations/20260628_certificates.sql
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 4. Arrancar el servidor
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Para probar pagos con Stripe en local:
 
-## Despliegue y entornos
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+# Copiar el whsec_... que imprime y pegarlo en STRIPE_WEBHOOK_SECRET del .env.local
+```
 
-Este proyecto usa dos entornos diferenciados, cada uno ligado a una rama de Git:
+Abrir [http://localhost:3000](http://localhost:3000)
 
-**Producción (`main`)**
-Cada vez que se fusiona código a la rama `main`, Vercel despliega automáticamente la versión actualizada al entorno de producción. Esta es la versión que ven los usuarios reales.
-URL: https://academia-creativa-one.vercel.app
+---
 
-**Staging / Vista previa (`develop`)**
-La rama `develop` tiene su propio despliegue automático en Vercel. Cada push a `develop` actualiza esta URL, que siempre apunta al último estado de la rama.
-URL: https://academia-creativa-git-develop-aprehenderia-9285s-projects.vercel.app
+## Tests
 
-**La regla de oro**
-Nada va directamente a `main`. Todo cambio sigue este camino:
+```bash
+npm test
+```
 
-1. Se crea una rama `feature/nombre-de-la-funcionalidad` a partir de `develop`.
-2. Se desarrolla y prueba en local.
-3. Se fusiona a `develop` y se verifica en el entorno de staging.
-4. Solo cuando está validado, se fusiona a `main` y llega a producción.
+Tests unitarios con Vitest en `__tests__/services/`.
+
+---
+
+## Documentación
+
+La carpeta `docs/` contiene:
+
+| Archivo | Para quién | Qué explica |
+|---|---|---|
+| [`documentacion-tecnica.md`](docs/documentacion-tecnica.md) | Desarrolladores | Arquitectura, modelo de datos, variables de entorno, cómo arrancar |
+| [`guia-uso-laura.md`](docs/guia-uso-laura.md) | Equipo de Academia Creativa | Cómo gestionar cursos, alumnos y resolver problemas desde el panel admin |
+| [`entrega-cliente.md`](docs/entrega-cliente.md) | Cliente | Accesos, funcionalidades entregadas, activación del modo producción |
+
+---
+
+## Convenciones del proyecto
+
+- Código y nombres de variables: **inglés**
+- Mensajes de commit y comentarios para el equipo: **español**
+- Texto visible para el usuario final: **español**
+- Tablas de Supabase: todas con **RLS activada**
+- Operaciones privilegiadas (matrículas): solo desde el servidor con `service_role`
+- Variables de entorno: nunca en Git — solo en `.env.local` o en Vercel
+
+---
+
+## Seguridad
+
+- `.env.local` está en `.gitignore` y nunca se sube al repositorio.
+- Todas las tablas de Supabase tienen Row Level Security (RLS) activada.
+- Las matrículas solo se crean en el servidor, tras verificar el pago de Stripe.
+- Los vídeos de los cursos usan URLs firmadas que caducan en 4 horas.
+- Los certificados solo los emite el servidor con `service_role`.
