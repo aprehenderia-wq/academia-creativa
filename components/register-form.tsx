@@ -22,18 +22,17 @@ export default function RegisterForm() {
     const password = (form.elements.namedItem('password') as HTMLInputElement).value
 
     try {
-      const { error: authError } = await signUp(email, password, fullName)
+      const { error: authError } = await signUp(email, password)
       if (authError) {
         setError(authError)
         setLoading(false)
         return
       }
-      await Promise.all([
-        createProfileAction(fullName),
-        sendWelcomeEmailAction(email, fullName),
-      ])
+      await createProfileAction(fullName)
+      // Email se envía sin bloquear la navegación: si Resend falla o tarda,
+      // el registro ya fue exitoso y no debe quedar con el spinner girando.
+      sendWelcomeEmailAction(email, fullName)
       router.push('/')
-      router.refresh()
     } catch {
       setError('Ha ocurrido un error inesperado. Inténtalo de nuevo.')
       setLoading(false)
