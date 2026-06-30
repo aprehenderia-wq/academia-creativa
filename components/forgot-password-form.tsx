@@ -15,7 +15,7 @@ export default function ForgotPasswordForm() {
     setLoading(true)
 
     const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value
-    const redirectTo = `${window.location.origin}/auth/callback?next=/auth/reset-password`
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/auth/reset-password`
 
     const { error: authError } = await resetPasswordForEmail(email, redirectTo)
 
