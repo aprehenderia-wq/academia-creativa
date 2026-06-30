@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
   }
 
   // 5. Crear la Checkout Session en Stripe
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://academia-creativa-one.vercel.app'
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
