@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { CATEGORIES, LEVELS } from '@/lib/constants/courses'
 
 function slugify(text: string): string {
@@ -85,11 +86,14 @@ export function AdminCourseForm() {
       const data = await res.json()
       if (!res.ok) {
         setError(data.error ?? 'Ha ocurrido un error.')
+        toast.error('Algo salió mal. Inténtalo de nuevo.')
         return
       }
+      toast.success('Curso creado con éxito')
       router.push('/admin/cursos')
     } catch {
       setError('No se pudo conectar con el servidor.')
+      toast.error('Algo salió mal. Inténtalo de nuevo.')
     } finally {
       setLoading(false)
     }

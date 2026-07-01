@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter, Fraunces } from "next/font/google"
+import { Toaster } from "sonner"
 import "./globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
@@ -64,6 +65,7 @@ export default function RootLayout({
           <PageWrapper>{children}</PageWrapper>
         </main>
         <Footer />
+        <Toaster position="top-right" duration={3500} />
       </body>
     </html>
   )

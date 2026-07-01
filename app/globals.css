@@ -99,3 +99,33 @@
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.4;
 }
+
+/* ── Toasts (sonner) ── */
+[data-sonner-toaster] {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+[data-sonner-toast] {
+  background: var(--color-card) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-foreground) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 8px 24px -4px rgba(44, 44, 42, 0.12) !important;
+  font-size: var(--text-small);
+}
+
+[data-sonner-toast][data-type='success'] {
+  border-color: var(--color-accent) !important;
+}
+
+[data-sonner-toast][data-type='success'] [data-icon] svg {
+  color: var(--color-accent);
+}
+
+[data-sonner-toast][data-type='error'] {
+  border-color: #dc2626 !important;
+}
+
+[data-sonner-toast][data-type='error'] [data-icon] svg {
+  color: #dc2626;
+}

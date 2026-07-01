@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { signUp } from '@/lib/services/auth'
 import { createProfileAction, sendWelcomeEmailAction } from '@/app/auth/actions'
 
@@ -25,6 +26,7 @@ export default function RegisterForm() {
       const { error: authError } = await signUp(email, password)
       if (authError) {
         setError(authError)
+        toast.error('Algo salió mal. Inténtalo de nuevo.')
         setLoading(false)
         return
       }
@@ -32,9 +34,11 @@ export default function RegisterForm() {
       // Email se envía sin bloquear la navegación: si Resend falla o tarda,
       // el registro ya fue exitoso y no debe quedar con el spinner girando.
       sendWelcomeEmailAction(email, fullName)
+      toast.success('¡Cuenta creada! Bienvenido/a a Academia Creativa')
       router.push('/')
     } catch {
       setError('Ha ocurrido un error inesperado. Inténtalo de nuevo.')
+      toast.error('Algo salió mal. Inténtalo de nuevo.')
       setLoading(false)
     }
   }

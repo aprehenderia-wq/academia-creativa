@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { updatePassword } from '@/lib/services/auth'
 
 // La sesión ya está activa cuando el usuario llega aquí:
@@ -35,10 +36,12 @@ export default function ResetPasswordForm() {
 
     if (authError) {
       setError(authError)
+      toast.error('Algo salió mal. Inténtalo de nuevo.')
       setLoading(false)
       return
     }
 
+    toast.success('Contraseña actualizada. Ya puedes iniciar sesión.')
     router.push('/dashboard')
     router.refresh()
   }

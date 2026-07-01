@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { signIn } from '@/lib/services/auth'
 
 export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
@@ -23,10 +24,12 @@ export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
     const { error: authError } = await signIn(email, password)
     if (authError) {
       setError(authError)
+      toast.error('Algo salió mal. Inténtalo de nuevo.')
       setLoading(false)
       return
     }
 
+    toast.success('Sesión iniciada')
     router.push(redirectTo ?? '/dashboard')
     router.refresh()
   }

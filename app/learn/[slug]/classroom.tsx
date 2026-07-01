@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { completeLesson } from '@/app/actions/lessons'
 
 // ============================================================================
@@ -79,9 +80,13 @@ export function Classroom({
       const result = await completeLesson(selectedLesson.id)
       if (result.completed) {
         setCompleted((prev) => new Set([...prev, selectedLesson.id]))
+        toast.success('Lección completada ✓')
         if (result.courseCompleted && result.certificateId) {
           setCertificateId(result.certificateId)
+          toast.success('¡Felicidades! Tu certificado está listo')
         }
+      } else {
+        toast.error('Algo salió mal. Inténtalo de nuevo.')
       }
     })
   }
