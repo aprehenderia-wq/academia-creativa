@@ -33,9 +33,14 @@ export default function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <p className="text-small text-muted-foreground text-center py-2">
-        Si el email existe, recibirás un enlace para restablecer tu contraseña.
-      </p>
+      <div className="flex flex-col gap-3 text-center py-2">
+        <p className="text-small text-muted-foreground">
+          Si el email existe, recibirás un enlace para restablecer tu contraseña.
+        </p>
+        <p className="text-caption text-muted-foreground">
+          Importante: abre el enlace desde el mismo navegador y dispositivo donde hiciste esta solicitud.
+        </p>
+      </div>
     )
   }
 
