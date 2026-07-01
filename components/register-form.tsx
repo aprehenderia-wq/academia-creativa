@@ -34,8 +34,9 @@ export default function RegisterForm() {
       // Email se envía sin bloquear la navegación: si Resend falla o tarda,
       // el registro ya fue exitoso y no debe quedar con el spinner girando.
       sendWelcomeEmailAction(email, fullName)
-      toast.success('¡Cuenta creada! Bienvenido/a a Academia Creativa')
-      router.push('/')
+      // El toast se muestra en la home (?registered=true) para que no
+      // se pierda: aquí se desmontaría de inmediato por la redirección.
+      router.push('/?registered=true')
     } catch {
       setError('Ha ocurrido un error inesperado. Inténtalo de nuevo.')
       toast.error('Algo salió mal. Inténtalo de nuevo.')

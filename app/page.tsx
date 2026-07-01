@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import Image from "next/image"
 import { getPublishedCourses } from "@/lib/services/courses"
 import { CourseCard } from "@/components/course-card"
 import { FadeIn } from "@/components/fade-in"
+import { QueryToast } from "@/components/query-toast"
 
 export const metadata: Metadata = {
   title: {
@@ -17,6 +19,10 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
+      <Suspense fallback={null}>
+        <QueryToast param="registered" message="¡Cuenta creada! Bienvenido/a a Academia Creativa" />
+      </Suspense>
+
       {/* ── HERO ── */}
       <section
         id="hero"

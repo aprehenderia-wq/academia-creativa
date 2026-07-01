@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createSessionClient } from '@/lib/supabase/server'
@@ -5,6 +6,7 @@ import { getEnrolledCourses } from '@/lib/services/enrollments'
 import { getUserCertificates } from '@/lib/services/certificates'
 import { EnrolledCourseCard } from '@/components/enrolled-course-card'
 import { FadeIn } from '@/components/fade-in'
+import { QueryToast } from '@/components/query-toast'
 
 export const metadata = {
   title: 'Mis cursos',
@@ -29,6 +31,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-background">
+      <Suspense fallback={null}>
+        <QueryToast param="loggedIn" message="Sesión iniciada" />
+      </Suspense>
+
       <div className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
 
         {/* Encabezado */}

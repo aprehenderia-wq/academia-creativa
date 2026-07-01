@@ -29,8 +29,9 @@ export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
       return
     }
 
-    toast.success('Sesión iniciada')
-    router.push(redirectTo ?? '/dashboard')
+    // El toast se muestra en el dashboard (?loggedIn=true) para que no se
+    // pierda: aquí se desmontaría de inmediato por la redirección.
+    router.push(redirectTo ?? '/dashboard?loggedIn=true')
     router.refresh()
   }
 
