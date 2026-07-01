@@ -36,6 +36,27 @@ export async function signOut(): Promise<void> {
   await supabase.auth.signOut()
 }
 
+// Solicita un email de recuperación de contraseña.
+// redirectTo debe incluir la URL completa del callback (con origen).
+export async function resetPasswordForEmail(
+  email: string,
+  redirectTo: string
+): Promise<AuthResult> {
+  const supabase = createClient()
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo })
+  if (error) return { error: translateAuthError(error.message) }
+  return { error: null }
+}
+
+// Actualiza la contraseña del usuario autenticado.
+// Solo funciona cuando hay una sesión activa (tras intercambiar el código del email).
+export async function updatePassword(password: string): Promise<AuthResult> {
+  const supabase = createClient()
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) return { error: translateAuthError(error.message) }
+  return { error: null }
+}
+
 // Convierte los mensajes de error de Supabase (en inglés) a mensajes
 // amigables en español para mostrar al usuario.
 export function translateAuthError(message: string): string {
@@ -53,6 +74,12 @@ export function translateAuthError(message: string): string {
   }
   if (message.includes('Email not confirmed')) {
     return 'Confirma tu correo electrónico antes de iniciar sesión.'
+  }
+  if (message.includes('New password should be different')) {
+    return 'La nueva contraseña debe ser diferente a la anterior.'
+  }
+  if (message.includes('Auth session missing') || message.includes('session_not_found')) {
+    return 'Tu enlace de recuperación ha expirado. Solicita uno nuevo.'
   }
   return 'Ha ocurrido un error. Inténtalo de nuevo.'
 }
