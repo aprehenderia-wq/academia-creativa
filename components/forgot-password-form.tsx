@@ -15,7 +15,9 @@ export default function ForgotPasswordForm() {
     setLoading(true)
 
     const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value
-    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/auth/reset-password`
+    // El intercambio del código PKCE se hace en el servidor (/auth/callback)
+    // para evitar que el cliente lo consuma antes que nuestro código.
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/auth/callback?next=/auth/reset-password`
 
     const { error: authError } = await resetPasswordForEmail(email, redirectTo)
 
