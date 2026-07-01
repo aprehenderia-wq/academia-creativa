@@ -1,36 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { updatePassword } from '@/lib/services/auth'
 
+// La sesión ya está activa cuando el usuario llega aquí:
+// /auth/callback intercambió el código PKCE en el servidor antes de redirigir.
 export default function ResetPasswordForm() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const [exchanging, setExchanging] = useState(true)
-  const [exchangeError, setExchangeError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Intercambia el código PKCE del email por una sesión activa.
-  // Sin este paso, updateUser falla porque no hay sesión.
-  useEffect(() => {
-    const code = searchParams.get('code')
-    if (!code) {
-      setExchanging(false)
-      return
-    }
-    const supabase = createClient()
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) {
-        setExchangeError('Tu enlace de recuperación ha expirado. Solicita uno nuevo.')
-      }
-      setExchanging(false)
-    })
-  }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -61,27 +41,6 @@ export default function ResetPasswordForm() {
 
     router.push('/dashboard')
     router.refresh()
-  }
-
-  if (exchanging) {
-    return (
-      <div className="flex justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    )
-  }
-
-  if (exchangeError) {
-    return (
-      <div className="flex flex-col gap-4 text-center">
-        <p role="alert" className="text-small text-red-600 bg-red-50 px-3 py-2 rounded-md">
-          {exchangeError}
-        </p>
-        <Link href="/auth/forgot-password" className="text-small text-accent hover:underline">
-          Solicitar un nuevo enlace
-        </Link>
-      </div>
-    )
   }
 
   return (
